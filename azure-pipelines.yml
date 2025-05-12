@@ -1,15 +1,15 @@
 # CI/CD pipeline for NutriFinder
 # Triggers:
-# - Push to main and dev branches
+# - Push to main and dev branches 
 # - Pull requests targeting main and dev
-# - Optional: trigger on feature branches (currently commented out)
+# - trigger on feature branches
 
 trigger:
   branches:
     include:
     - main
     - dev
-    # - feature/*
+    - feature/*
 
 pr:
   branches:
