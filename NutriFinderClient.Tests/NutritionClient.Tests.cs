@@ -114,6 +114,28 @@ public class NutritionClientOutputTests
     }
     
     [TestMethod]
+    public void TestOutput_MinimalDTO()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        var dto = new NutritionData
+        {
+            FoodItemName = "test",
+            Carb = 0,
+            Fiber = 0,
+            Protein = 0,
+            Fat = 0,
+            Kcal = 0,
+        };
+        
+        // Act
+        var output = client.FormatNutritionOutput(dto);
+    
+        // Assert
+        Assert.IsNotNull(output);
+    }
+    
+    [TestMethod]
     public void Display_ShouldBeValid()
     {
         // Arrange
