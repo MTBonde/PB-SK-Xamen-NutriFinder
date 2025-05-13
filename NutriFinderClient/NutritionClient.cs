@@ -24,5 +24,16 @@ public class NutritionClient
        return "ok";
     }
 
- 
+    public string FormatNutritionOutput(NutritionData data)
+    {
+        return $"""
+                Food: {data.FoodItemName}
+                Carbohydrates: {data.Carb} g
+                Fiber: {data.Fiber} g
+                Net Carbohydrates: {data.Carb - data.Fiber} g
+                Protein: {data.Protein} g
+                Fat: {data.Fat} g
+                Calories: {data.Kcal} kcal
+                """;
+    }
 }
