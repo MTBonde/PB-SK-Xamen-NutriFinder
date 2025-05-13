@@ -1,0 +1,99 @@
+namespace NutriFinderClient.Tests;
+
+[TestClass]
+public class NutritionClientInputTests
+{
+    // Arrange
+    string expected = "Only English letters is accepted";
+    
+    // Act
+    
+    // Assert
+    [TestMethod]
+    public void Can_Instantiate_NutritionClient()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        
+        // Act
+    
+        // Assert
+        Assert.IsNotNull(client);
+    }
+    
+    [TestMethod]
+    public void ValidateInput_ShouldRejectEmptyInput()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        var input = "";
+        var expectedEmpty = "Input can not be empty";
+        
+        // Act
+        var result = client.ValidateInput(input);
+    
+        // Assert
+        Assert.AreEqual(result, expectedEmpty);
+    }
+    
+    [TestMethod]
+    public void ValidateInput_ShouldRejectNumbersInInput()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        var input = "123";
+        var expectedNumbers = "Input can not contain numbers";
+        
+        // Act
+        var result = client.ValidateInput(input);
+    
+        // Assert
+        Assert.AreEqual(result, expectedNumbers);
+    }
+    
+    [TestMethod]
+    public void ValidateInput_ShouldRejectSpecialCharacters()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        var input = "@£$";
+        // var expected = "Input can not contain special characters";
+        
+        // Act
+        var result = client.ValidateInput(input);
+    
+        // Assert
+        Assert.AreEqual(result, expected);
+    }
+    
+    //Examples of rejection include æ, ø, å, Ô, ò, etc.
+    [TestMethod]
+    public void ValidateInput_ShouldRejectNonAZ()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        var input = "æble";
+        // var expected = "Input can only be A-Z with no tone indicators";
+        
+        // Act
+        var result = client.ValidateInput(input);
+    
+        // Assert
+        Assert.AreEqual(result, expected);
+    }
+    
+    [TestMethod]
+    public void Input_ShouldBeValid()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        var input = "banana";
+        string validExpected = "ok";
+        
+        // Act
+        var result = client.ValidateInput(input);
+    
+        // Assert
+        Assert.AreEqual(result, validExpected);
+    }
+}
