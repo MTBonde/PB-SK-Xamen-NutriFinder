@@ -36,4 +36,9 @@ public class NutritionClient
                 Calories: {data.Kcal} kcal
                 """;
     }
+
+    public string? FormatErrorMessageFromStatusCode(int expectedStatusCode)
+    {
+        throw new NotImplementedException();
+    }
 }

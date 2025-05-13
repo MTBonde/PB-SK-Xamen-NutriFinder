@@ -159,13 +159,17 @@ public class NutritionClientOutputTests
     }
     
     [TestMethod]
-    public void Display_ShouldBeValid()
+    public void TestErrorCodes_ShouldReturn404()
     {
         // Arrange
-        
+        var client = new NutritionClient();
+        var expectedStatusCode = 404;
+
         // Act
-    
+        var result = client.FormatErrorMessageFromStatusCode(expectedStatusCode);
+
         // Assert
-  
+        Assert.AreEqual("Error: Food item not found", result);
+
     }
 }
