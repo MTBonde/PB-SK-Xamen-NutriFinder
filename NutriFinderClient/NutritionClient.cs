@@ -41,6 +41,7 @@ public class NutritionClient
     {
         return expectedStatusCode switch
         {
+            200 => "Success: OK!",
             404 => "Error: Food item not found",
             _ => null
         };
