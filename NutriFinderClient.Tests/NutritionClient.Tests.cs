@@ -171,4 +171,18 @@ public class NutritionClientOutputTests
         // Assert
         Assert.AreEqual("Error: Food item not found", result);
     }
+    
+    [TestMethod]
+    public void TestErrorCodes_ShouldReturn200()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        var expectedStatusCode = 200;
+
+        // Act
+        var result = client.FormatErrorMessageFromStatusCode(expectedStatusCode);
+
+        // Assert
+        Assert.AreEqual("Success: OK!", result);
+    }
 }
