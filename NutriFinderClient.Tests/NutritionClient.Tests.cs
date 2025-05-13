@@ -199,4 +199,18 @@ public class NutritionClientOutputTests
         // Assert
         Assert.AreEqual("Error: Bad request!", result);
     }
+    
+    [TestMethod]
+    public void TestErrorCodes_ShouldReturn503()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        var expectedStatusCode = 503;
+        
+        // Act
+        var result = client.FormatErrorMessageFromStatusCode(expectedStatusCode);
+        
+        // Assert
+        Assert.AreEqual("Error: External API is not available and no cached data was found.", result);
+    }
 }
