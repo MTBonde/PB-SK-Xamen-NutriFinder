@@ -44,7 +44,6 @@ public class Program
             {
                 Console.WriteLine(client.FormatErrorMessageFromStatusCode(statusCode));
             }
-         
         }
     }
 }
