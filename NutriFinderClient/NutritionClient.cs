@@ -39,6 +39,10 @@ public class NutritionClient
 
     public string? FormatErrorMessageFromStatusCode(int expectedStatusCode)
     {
-        throw new NotImplementedException();
+        return expectedStatusCode switch
+        {
+            404 => "Error: Food item not found",
+            _ => null
+        };
     }
 }

@@ -170,6 +170,5 @@ public class NutritionClientOutputTests
 
         // Assert
         Assert.AreEqual("Error: Food item not found", result);
-
     }
 }
