@@ -185,4 +185,18 @@ public class NutritionClientOutputTests
         // Assert
         Assert.AreEqual("Success: OK!", result);
     }
+
+    [TestMethod]
+    public void TestErrorCodes_ShouldReturn400()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        var expectedStatusCode = 400;
+        
+        // Act
+        var result = client.FormatErrorMessageFromStatusCode(expectedStatusCode);
+        
+        // Assert
+        Assert.AreEqual("Error: Bad Request!", result);
+    }
 }
