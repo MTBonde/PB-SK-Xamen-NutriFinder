@@ -97,3 +97,30 @@ public class NutritionClientInputTests
         Assert.AreEqual(result, validExpected);
     }
 }
+
+[TestClass]
+public class NutritionClientOutputTests
+{
+    [TestMethod]
+    public void Can_Instantiate_NutritionDTO()
+    {
+        // Arrange
+        var dto = new NutritionData();
+        
+        // Act
+    
+        // Assert
+        Assert.IsNotNull(dto);
+    }
+    
+    [TestMethod]
+    public void Display_ShouldBeValid()
+    {
+        // Arrange
+        
+        // Act
+    
+        // Assert
+  
+    }
+}

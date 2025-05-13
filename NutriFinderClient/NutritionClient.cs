@@ -20,8 +20,7 @@ public class NutritionClient
         
        if (!Regex.IsMatch(input, "^[a-zA-Z ]+$"))
            return "Only English letters is accepted";
-          
-     
-        return "ok";
+       
+       return "ok";
     }
 }
