@@ -135,6 +135,28 @@ public class NutritionClientOutputTests
         Assert.IsNotNull(output);
     }
     
+    public void TestOutput_ShouldFormatCorrectly()
+    {
+        // Arrange
+        var client = new NutritionClient();
+        var dto = new NutritionData
+        {
+            FoodItemName = "banana",
+            Carb = 100,
+            Fiber = 10,
+            Protein = 5,
+            Fat = 1,
+            Kcal = 250,
+        };
+        
+        // Act
+        var output = client.FormatNutritionOutput(dto);
+    
+        // Assert
+        Assert.Contains(output, "Food: banana");
+        Assert.Contains(output, "Calories: 250 kcal");
+    }
+    
     [TestMethod]
     public void Display_ShouldBeValid()
     {
