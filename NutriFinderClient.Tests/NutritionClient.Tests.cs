@@ -197,6 +197,6 @@ public class NutritionClientOutputTests
         var result = client.FormatErrorMessageFromStatusCode(expectedStatusCode);
         
         // Assert
-        Assert.AreEqual("Error: Bad Request!", result);
+        Assert.AreEqual("Error: Bad request!", result);
     }
 }
