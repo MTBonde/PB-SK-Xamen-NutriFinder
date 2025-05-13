@@ -135,6 +135,7 @@ public class NutritionClientOutputTests
         Assert.IsNotNull(output);
     }
     
+    [TestMethod]
     public void TestOutput_ShouldFormatCorrectly()
     {
         // Arrange
@@ -153,8 +154,8 @@ public class NutritionClientOutputTests
         var output = client.FormatNutritionOutput(dto);
     
         // Assert
-        Assert.Contains(output, "Food: banana");
-        Assert.Contains(output, "Calories: 250 kcal");
+        StringAssert.Contains(output, "Food: banana");
+        StringAssert.Contains(output, "Calories: 250 kcal");
     }
     
     [TestMethod]
