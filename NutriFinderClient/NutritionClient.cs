@@ -44,6 +44,7 @@ public class NutritionClient
             200 => "Success: OK!",
             400 => "Error: Bad request!",
             404 => "Error: Food item not found",
+            503 => "Error: External API is not available and no cached data was found.",
             _ => null
         };
     }
