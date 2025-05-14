@@ -25,7 +25,7 @@ public class Program
             
             // fake HTTP-Respons
             var statusCode = 200;
-            NutritionData? nutritionData = new NutritionData
+            NutritionDTO? nutritionData = new NutritionDTO
             {
                 FoodItemName = userInput,
                 Carb = 100,

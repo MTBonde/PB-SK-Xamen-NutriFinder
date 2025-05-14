@@ -1,6 +1,6 @@
 namespace NutriFinderClient;
 
-public class NutritionData
+public class NutritionDTO
 {
     public string FoodItemName { get; set; } = string.Empty;
     public float Carb { get; set; }
