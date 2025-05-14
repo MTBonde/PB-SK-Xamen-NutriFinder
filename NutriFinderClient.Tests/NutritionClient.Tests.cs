@@ -105,7 +105,7 @@ public class NutritionClientOutputTests
     public void Can_Instantiate_NutritionDTO()
     {
         // Arrange
-        var dto = new NutritionData();
+        var dto = new NutritionDTO();
         
         // Act
     
@@ -118,7 +118,7 @@ public class NutritionClientOutputTests
     {
         // Arrange
         var client = new NutritionClient();
-        var dto = new NutritionData
+        var dto = new NutritionDTO
         {
             FoodItemName = "test",
             Carb = 0,
@@ -140,7 +140,7 @@ public class NutritionClientOutputTests
     {
         // Arrange
         var client = new NutritionClient();
-        var dto = new NutritionData
+        var dto = new NutritionDTO
         {
             FoodItemName = "banana",
             Carb = 100,
