@@ -1,0 +1,26 @@
+﻿version: '3.8'
+
+services:
+#  mongo:
+#    image: mongo
+#    ports:
+#      - "27017:27017"
+#    container_name: nutrifinder-mongo
+
+#  nutrifinderserver:
+#    build:
+#      context: .
+#      dockerfile: NutriFinderServer/Dockerfile
+#    ports:
+#      - "5000:8080"
+#    depends_on:
+#      - mongo
+#    environment:
+#      - Mongo__ConnectionString=mongodb://mongo:27017
+
+  nutrifinderclient:
+    build:
+      context: .
+      dockerfile: NutriFinderClient/Dockerfile
+    depends_on:
+      - nutrifinderserver
