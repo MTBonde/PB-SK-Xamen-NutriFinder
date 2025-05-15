@@ -24,7 +24,13 @@ steps:
   - task: CmdLine@2
     displayName: 'Build Docker image'
     inputs:
-      script: docker build -t mtbonde/nutrifinder:$(Build.SourceBranchName) -t mtbonde/nutrifinder:latest ./NutriFinderClient
+      script: |                                                        # YAML block scalar (|) for multi-line shell commands
+        docker build \                                                 # Build
+          -t mtbonde/nutrifinder:$(Build.SourceBranchName) \           # tag image with Branch name
+          -t mtbonde/nutrifinder:latest \                              # tag image with "Latest"
+          -f NutriFinderClient/Dockerfile \                            # dockerfile located in the client project folder
+          .                                                            # . means build from solution root, so path in dockerfile are valid
+
 
   # Step 2: Authenticate and push both tags to Docker Hub
   - task: CmdLine@2
