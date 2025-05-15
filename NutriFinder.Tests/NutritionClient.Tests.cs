@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Testing;
-using NutriFinder.Client;
+using NutriFinderClient;
 
 namespace NutriFinder.Tests
 {

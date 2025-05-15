@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 
-namespace NutriFinder.Client;
+namespace NutriFinderClient;
 
 public class NutritionClient
 {

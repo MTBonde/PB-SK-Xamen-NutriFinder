@@ -8,8 +8,8 @@ pr: none
 # Reference the CI pipeline that must complete before this CD pipeline runs
 resources:
   pipelines:
-    - pipeline: BuildAndTest  
-      source: BuildAndTest     
+    - pipeline: BuildAndTest
+      source: BuildAndTest
       trigger:
         branches:
           include:
@@ -24,7 +24,7 @@ steps:
   - task: CmdLine@2
     displayName: 'Build Docker image'
     inputs:
-      script: docker build -t mtbonde/nutrifinder:$(Build.SourceBranchName) -t mtbonde/nutrifinder:latest ./NutriFinder.Client
+      script: docker build -t mtbonde/nutrifinder:$(Build.SourceBranchName) -t mtbonde/nutrifinder:latest ./NutriFinderClient
 
   # Step 2: Authenticate and push both tags to Docker Hub
   - task: CmdLine@2

@@ -1,4 +1,4 @@
-using NutriFinder.Client;
+using NutriFinderClient;
 
 namespace NutriFinder.Server.Interfaces;
 

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NutriFinder.Client;
+namespace NutriFinderClient;
 
 [ExcludeFromCodeCoverage]
 public class Program
