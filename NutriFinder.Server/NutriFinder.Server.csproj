@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NutriFinder.Client\NutriFinder.Client.csproj" />
+      <ProjectReference Include="..\NutriFinderClient\NutriFinderClient.csproj" />
       <ProjectReference Include="..\NutriFinder.Database\NutriFinder.Database.csproj" />
       <ProjectReference Include="..\NutriFinder.ExternAPI\NutriFinder.ExternAPI.csproj" />
     </ItemGroup>

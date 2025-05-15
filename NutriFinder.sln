@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutriFinder.Client", "NutriFinder.Client\NutriFinder.Client.csproj", "{8C656D93-E57C-4239-A7F9-50D8236A0B93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutriFinderClient", "NutriFinderClient\NutriFinderClient.csproj", "{8C656D93-E57C-4239-A7F9-50D8236A0B93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutriFinder.Tests", "NutriFinder.Tests\NutriFinder.Tests.csproj", "{8B5914DB-4E79-47C2-A2E4-1948AE67DB1D}"
 EndProject
