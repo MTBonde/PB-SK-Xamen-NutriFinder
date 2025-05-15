@@ -22,21 +22,15 @@ pool:
 steps:
   # Step 1: Build Docker image with two tags: latest and unique build ID
   - task: CmdLine@2
-    displayName: 'Build server Docker image'
+    displayName: 'Build Docker image'
     inputs:
-      script: |
-        docker build -t mtbonde/nutrifinder-server:${{ resources.pipeline.BuildAndTest.runName }} \
-                     -t mtbonde/nutrifinder-server:latest \
-                     -f NutriFinderServer/Dockerfile .
+      script: docker build -t mtbonde/nutrifinder:$(Build.SourceBranchName) -t mtbonde/nutrifinder:latest ./NutriFinderClient
 
   # Step 2: Authenticate and push both tags to Docker Hub
   - task: CmdLine@2
     displayName: 'Push image to Docker Hub'
     inputs:
-      script: |
-        echo $(dockerHubPassword) | docker login -u $(dockerHubUser) --password-stdin
-        docker push mtbonde/nutrifinder-server:latest
-        docker push mtbonde/nutrifinder-server:${{ resources.pipeline.BuildAndTest.runName }}
+      script: docker push --all-tags mtbonde/nutrifinder
 
   # Step 3: Optional cleanup to remove unused images from the agent
   - task: CmdLine@2
