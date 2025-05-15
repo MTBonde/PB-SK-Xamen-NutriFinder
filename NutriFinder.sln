@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutriFinderClient", "NutriFinderClient\NutriFinderClient.csproj", "{8C656D93-E57C-4239-A7F9-50D8236A0B93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutriFinder.Client", "NutriFinder.Client\NutriFinder.Client.csproj", "{8C656D93-E57C-4239-A7F9-50D8236A0B93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutriFinderClient.Tests", "NutriFinderClient.Tests\NutriFinderClient.Tests.csproj", "{8B5914DB-4E79-47C2-A2E4-1948AE67DB1D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutriFinder.Tests", "NutriFinder.Tests\NutriFinder.Tests.csproj", "{8B5914DB-4E79-47C2-A2E4-1948AE67DB1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutriFinderServer", "NutriFinderServer\NutriFinderServer.csproj", "{CEEB613B-A7AE-41FD-AFDF-AAD5F4053B08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutriFinder.Server", "NutriFinder.Server\NutriFinder.Server.csproj", "{CEEB613B-A7AE-41FD-AFDF-AAD5F4053B08}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EC884519-8CF0-44B9-B2BB-237BE73BC1AB}"
 	ProjectSection(SolutionItems) = preProject

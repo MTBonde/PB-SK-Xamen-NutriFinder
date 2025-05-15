@@ -1,4 +1,4 @@
-namespace NutriFinderClient;
+namespace NutriFinder.Client;
 
 public class NutritionDTO
 {

@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NutriFinderClient;
+namespace NutriFinder.Client;
 
 [ExcludeFromCodeCoverage]
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var client = new NutritionClient();
 
@@ -23,8 +23,8 @@ public class Program
                 continue;
             }
             
-            // fake HTTP-Respons
-            var statusCode = 200;
+            /*// fake HTTP-Respons
+            var statusCode; 
             NutritionDTO? nutritionData = new NutritionDTO
             {
                 FoodItemName = userInput,
@@ -34,7 +34,7 @@ public class Program
                 Fat = 1,
                 Kcal = 250,
             };
-
+            
             if (statusCode == 200 && nutritionData != null)
             {
                 Console.WriteLine(client.FormatNutritionOutput(nutritionData));
@@ -43,7 +43,18 @@ public class Program
             else
             {
                 Console.WriteLine(client.FormatErrorMessageFromStatusCode(statusCode));
+            }*/
+            
+            NutritionDTO? dto = await client.FetchNutritionDataAsync(userInput);
+    
+            if (dto == null)
+            {
+                Console.WriteLine("Failed to fetch data.");
+                continue;
             }
+
+            Console.WriteLine(client.FormatNutritionOutput(dto));
+            break;
         }
     }
 }
