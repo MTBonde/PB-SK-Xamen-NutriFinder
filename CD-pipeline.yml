@@ -25,7 +25,7 @@ steps:
     displayName: 'Build server Docker image'
     inputs:
       script: |
-        docker build -t mtbonde/nutrifinder-server:${{ resources.pipeline.BuildAndTest.runName }} \
+        docker build -t mtbonde/nutrifinder-server:${{ resources.pipelines.BuildAndTest.runName }} \
                      -t mtbonde/nutrifinder-server:latest \
                      -f NutriFinderServer/Dockerfile .
 
@@ -36,7 +36,7 @@ steps:
       script: |
         echo $(dockerHubPassword) | docker login -u $(dockerHubUser) --password-stdin
         docker push mtbonde/nutrifinder-server:latest
-        docker push mtbonde/nutrifinder-server:${{ resources.pipeline.BuildAndTest.runName }}
+        docker push mtbonde/nutrifinder-server:${{ resources.pipelines.BuildAndTest.runName }}
 
   # Step 3: Optional cleanup to remove unused images from the agent
   - task: CmdLine@2
