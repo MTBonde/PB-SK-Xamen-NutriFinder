@@ -1,6 +1,8 @@
+using NutriFinder.Server.Interfaces;
+
 namespace NutriFinder.Server
 {
-    public class ServerProgram
+    public class ServerProgram : IServerProgram
     {
         public static void Main(string[] args)
         {
