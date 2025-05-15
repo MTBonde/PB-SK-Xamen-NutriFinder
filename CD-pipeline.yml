@@ -24,7 +24,7 @@ steps:
   - task: CmdLine@2
     displayName: 'Build Docker image'
     inputs:
-      script: docker build -t mtbonde/nutrifinder:$(Build.SourceBranchName) -t mtbonde/nutrifinder:latest ./NutriFinderClient
+      script: docker build -t mtbonde/nutrifinder:$(Build.SourceBranchName) -t mtbonde/nutrifinder:latest ./NutriFinder.Client
 
   # Step 2: Authenticate and push both tags to Docker Hub
   - task: CmdLine@2
