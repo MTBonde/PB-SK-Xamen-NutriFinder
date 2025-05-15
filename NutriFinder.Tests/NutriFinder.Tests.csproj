@@ -13,7 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NutriFinderClient\NutriFinderClient.csproj" />
+    <ProjectReference Include="..\NutriFinder.Client\NutriFinder.Client.csproj" />
+    <ProjectReference Include="..\NutriFinder.Server\NutriFinder.Server.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +22,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.5" />
     <PackageReference Include="MSTest" Version="3.8.3" />
   </ItemGroup>
 

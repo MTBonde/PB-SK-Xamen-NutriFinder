@@ -1,9 +1,22 @@
+using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 
-namespace NutriFinderClient;
+namespace NutriFinder.Client;
 
 public class NutritionClient
 {
+    private HttpClient httpClient;
+
+    public NutritionClient()
+    {
+        
+    }
+    
+    public NutritionClient(HttpClient httpClient)
+    {
+        this.httpClient = httpClient;
+    }
+    
     public string ValidateInput(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
@@ -18,13 +31,13 @@ public class NutritionClient
         // if (!input.Any(char.IsAsciiLetter)) 
         //     return "Input can only be A-Z with no tone indicators";
         
-       if (!Regex.IsMatch(input, "^[a-zA-Z ]+$"))
+       if (!Regex.IsMatch(input, "^[a-åA-Å ]+$"))
            return "Only English letters is accepted";
        
        return "ok";
     }
 
-    public string FormatNutritionOutput(NutritionDTO dto)
+    public string FormatNutritionOutput(NutritionDTO? dto)
     {
         return $"""
                 Food: {dto.FoodItemName}
@@ -47,5 +60,16 @@ public class NutritionClient
             503 => "Error: External API is not available and no cached data was found.",
             _ => null
         };
+    }
+
+    public async Task<NutritionDTO?> FetchNutritionDataAsync(string query)
+    {
+        //using var http = new HttpClient();
+
+        var response = await httpClient.GetAsync($"/api/nutrition?query={query}");
+
+        if (!response.IsSuccessStatusCode) return null; 
+
+        return await response.Content.ReadFromJsonAsync<NutritionDTO>();
     }
 }
