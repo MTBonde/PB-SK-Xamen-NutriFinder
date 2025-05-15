@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NutriFinder.Client\NutriFinder.Client.csproj" />
+    <ProjectReference Include="..\NutriFinderClient\NutriFinderClient.csproj" />
     <ProjectReference Include="..\NutriFinder.Server\NutriFinder.Server.csproj" />
   </ItemGroup>
 
