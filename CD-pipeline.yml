@@ -24,7 +24,7 @@ steps:
   - task: CmdLine@2
     displayName: 'Build Docker image'
     inputs:
-      script: docker build -t mtbonde/nutrifinder-client:$(Build.SourceBranchName) -t mtbonde/nutrifinder-client:latest -f NutriFinderClient/Dockerfile .
+      script: docker build -t mtbonde/nutrifinder-client:$(Build.BuildNumber) -t mtbonde/nutrifinder-client:latest -f NutriFinderClient/Dockerfile .
          # . means build from solution root, so path in dockerfile are valid
 
   # Step 2: Login agent and push both tags to Docker Hub
