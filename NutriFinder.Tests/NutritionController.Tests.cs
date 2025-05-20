@@ -84,7 +84,7 @@ namespace NutriFinder.Tests
         }
         
         [TestMethod]
-        public async Task Return200_WhenExternalReturnData()
+        public async Task Return200_WhenExternalReturnDataAndDataIsSavedToDatabase()
         {
             // Arrange
             _mockRepository.Setup(r => r.GetNutritionDataAsync("Banan")).ReturnsAsync((NutritionDTO?)null);
@@ -95,6 +95,7 @@ namespace NutriFinder.Tests
             var result = await _controller.Get("Æble");
         
             // Assert
+            _mockRepository.Verify(r => r.SaveNutritionDataAsync(dto), Times.Once);
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             Assert.AreEqual(dto, (result as OkObjectResult)?.Value);
         }

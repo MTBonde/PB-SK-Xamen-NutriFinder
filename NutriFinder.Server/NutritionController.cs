@@ -38,18 +38,21 @@ namespace NutriFinder.Server
             if (dto != null)
                 return Ok(dto);
 
-            // lookup with external api
+            // try lookup with external api
             try
             {
+                //Attempt fetch of data from external
                 var fetchedDto = await _nutritionExternalApi.FetchNutritionDataAsync(foodItemName);
                 if (fetchedDto == null)
                 {
                     return NotFound();
                 }
                 
+                // save to local database and return result
                 await nutritionRepository.SaveNutritionDataAsync(fetchedDto);
                 return Ok(fetchedDto);
             }
+            // catch exception if not available and return 503
             catch (Exception e)
             {
                 Console.WriteLine(e);
