@@ -5,7 +5,7 @@ namespace NutriFinder.Server.Interfaces;
 /// <summary>
 /// Represents a client for interacting with an external nutrition API to fetch nutritional data for food items.
 /// </summary>
-public interface INutritionExternalApiClient
+public interface INutritionExternalApi
 {
     /// <summary>
     /// Asynchronously fetches the nutritional data for a specified food item from an external nutrition API.
