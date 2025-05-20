@@ -25,7 +25,7 @@ public interface INutritionRepository
     /// <returns>
     /// A task that represents the asynchronous save operation.
     /// </returns>
-    Task SaveNutrtionDataAsync(NutritionDTO dto);
+    Task SaveNutritionDataAsync(NutritionDTO dto);
 
     /// <summary>
     /// Asynchronously checks if nutrition data exists for a specified food item.
@@ -35,5 +35,5 @@ public interface INutritionRepository
     /// A task that represents the asynchronous operation. The task result is a boolean indicating
     /// whether the nutrition data for the specified food item exists.
     /// </returns>
-    Task<bool> DoesNutrtionExistAsync(string foodItemName);
+    Task<bool> DoesNutritionExistAsync(string foodItemName);
 }
