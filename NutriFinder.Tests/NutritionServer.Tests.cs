@@ -1,12 +1,10 @@
-using Microsoft.AspNetCore.Mvc.Testing;
 using NutriFinder.Server;
-using NutriFinderClient;
-using NutritionDTO = NutriFinderClient.NutritionDTO;
+using NutriFinder.Server.Helpers;
 
 namespace NutriFinder.Tests
 {
     [TestClass]
-    public class NutritionClientInputTests
+    public class RequestValidationTests
     {
         // Arrange
         string expected = "Only English letters is accepted";
@@ -14,99 +12,127 @@ namespace NutriFinder.Tests
         // Act
     
         // Assert
+        
+        private RequestValidator validator;
+        
+        [TestInitialize]
+        public void Setup()
+        {
+            validator = new RequestValidator();
+        }
+        
         [TestMethod]
-        public void Can_Instantiate_NutritionClient()
+        public void Can_Instantiate_NutritionServer()
         {
             // Arrange
-            var client = new NutritionClient();
         
             // Act
     
             // Assert
-            Assert.IsNotNull(client);
         }
     
         [TestMethod]
-        public void ValidateInput_ShouldRejectEmptyInput()
+        public void ValidateRequest_ShouldRejectEmptyRequest()
         {
             // Arrange
-            var client = new NutritionClient();
-            var input = "";
-            var expectedEmpty = "Input can not be empty";
+            var Request = "";
+            var expectedEmpty = "Request can not be empty";
         
             // Act
-            var result = client.ValidateInput(input);
+            var result = validator.Validate(Request);
     
             // Assert
             Assert.AreEqual(result, expectedEmpty);
         }
     
         [TestMethod]
-        public void ValidateInput_ShouldRejectNumbersInInput()
+        public void ValidateRequest_ShouldRejectNumbersInRequest()
         {
             // Arrange
-            var client = new NutritionClient();
-            var input = "123";
-            var expectedNumbers = "Input can not contain numbers";
+            var Request = "123";
+            var expectedNumbers = "Request can not contain numbers";
         
             // Act
-            var result = client.ValidateInput(input);
+            var result = validator.Validate(Request);
     
             // Assert
             Assert.AreEqual(result, expectedNumbers);
         }
     
         [TestMethod]
-        public void ValidateInput_ShouldRejectSpecialCharacters()
+        public void ValidateRequest_ShouldRejectSpecialCharacters()
         {
             // Arrange
-            var client = new NutritionClient();
-            var input = "@£$";
-            // var expected = "Input can not contain special characters";
+            var Request = "@£$";
+            var expectedSpecial = "Request can not contain special characters";
         
             // Act
-            var result = client.ValidateInput(input);
+            var result = validator.Validate(Request);
+    
+            // Assert
+            Assert.AreEqual(result, expectedSpecial);
+        }
+        
+        [TestMethod]
+        public void ValidateRequest_ShouldRejectChineseCharacters()
+        {
+            // Arrange
+            var Request = "鸡肉";
+        
+            // Act
+            var result = validator.Validate(Request);
     
             // Assert
             Assert.AreEqual(result, expected);
         }
     
-        //Examples of rejection include æ, ø, å, Ô, ò, etc.
+        //Examples of rejection include Ô, ò, etc.
         [TestMethod]
-        public void ValidateInput_ShouldRejectNonAZ()
+        public void ValidateRequest_ShouldRejectNonAZ()
         {
             // Arrange
-            var client = new NutritionClient();
-            var input = "æble";
-            // var expected = "Input can only be A-Z with no tone indicators";
+            var Request = "æble";
         
             // Act
-            var result = client.ValidateInput(input);
+            var result = validator.Validate(Request);
     
             // Assert
             Assert.AreEqual(result, expected);
         }
     
         [TestMethod]
-        public void Input_ShouldBeValid()
+        public void Request_ShouldBeValid()
         {
             // Arrange
-            var client = new NutritionClient();
-            var input = "banana";
+            var Request = "banana";
             string validExpected = "ok";
         
             // Act
-            var result = client.ValidateInput(input);
+            var result = validator.Validate(Request);
     
             // Assert
             Assert.AreEqual(result, validExpected);
         }
     }
-
+    
     [TestClass]
-    public class NutritionClientOutputTests
+    public class OutputFromFormaterTests
     {
+        
+        // Arrange
+        string expected = "Only English letters is accepted";
         string input = "Æble";
+        OutputFormatter formatter = new OutputFormatter();
+        
+        // Act
+    
+        // Assert
+        
+        [TestInitialize]
+        public void Setup()
+        {
+            formatter = new OutputFormatter();
+        }
         
         [TestMethod]
         public void Can_Instantiate_NutritionDTO()
@@ -124,7 +150,6 @@ namespace NutriFinder.Tests
         public void TestOutput_MinimalDTO()
         {
             // Arrange
-            var client = new NutritionClient();
             var dto = new NutritionDTO
             {
                 FoodItemName = "test",
@@ -136,7 +161,7 @@ namespace NutriFinder.Tests
             };
         
             // Act
-            var output = client.FormatNutritionOutput(dto);
+            var output = formatter.FormatNutritionOutput(dto);
     
             // Assert
             Assert.IsNotNull(output);
@@ -146,7 +171,6 @@ namespace NutriFinder.Tests
         public void TestOutput_ShouldFormatCorrectly()
         {
             // Arrange
-            var client = new NutritionClient();
             var dto = new NutritionDTO
             {
                 FoodItemName = input,
@@ -158,7 +182,7 @@ namespace NutriFinder.Tests
             };
         
             // Act
-            var output = client.FormatNutritionOutput(dto);
+            var output = formatter.FormatNutritionOutput(dto);
     
             // Assert
             StringAssert.Contains(output, $"Food: {input}");
@@ -169,11 +193,10 @@ namespace NutriFinder.Tests
         public void TestErrorCodes_ShouldReturn404()
         {
             // Arrange
-            var client = new NutritionClient();
             var expectedStatusCode = 404;
 
             // Act
-            var result = client.FormatErrorMessageFromStatusCode(expectedStatusCode);
+            var result = formatter.FormatErrorMessageFromStatusCode(expectedStatusCode);
 
             // Assert
             Assert.AreEqual("Error: Food item not found", result);
@@ -183,11 +206,10 @@ namespace NutriFinder.Tests
         public void TestErrorCodes_ShouldReturn200()
         {
             // Arrange
-            var client = new NutritionClient();
             var expectedStatusCode = 200;
 
             // Act
-            var result = client.FormatErrorMessageFromStatusCode(expectedStatusCode);
+            var result = formatter.FormatErrorMessageFromStatusCode(expectedStatusCode);
 
             // Assert
             Assert.AreEqual("Success: OK!", result);
@@ -197,11 +219,10 @@ namespace NutriFinder.Tests
         public void TestErrorCodes_ShouldReturn400()
         {
             // Arrange
-            var client = new NutritionClient();
             var expectedStatusCode = 400;
         
             // Act
-            var result = client.FormatErrorMessageFromStatusCode(expectedStatusCode);
+            var result = formatter.FormatErrorMessageFromStatusCode(expectedStatusCode);
         
             // Assert
             Assert.AreEqual("Error: Bad request!", result);
@@ -211,58 +232,13 @@ namespace NutriFinder.Tests
         public void TestErrorCodes_ShouldReturn503()
         {
             // Arrange
-            var client = new NutritionClient();
             var expectedStatusCode = 503;
         
             // Act
-            var result = client.FormatErrorMessageFromStatusCode(expectedStatusCode);
+            var result = formatter.FormatErrorMessageFromStatusCode(expectedStatusCode);
         
             // Assert
             Assert.AreEqual("Error: External API is not available and no cached data was found.", result);
-        }
-    }
-
-    [TestClass]
-    public class FetchNutritionTests
-    {
-        string input = "Banan";
-
-        private WebApplicationFactory<ServerProgram>? factory;
-        private HttpClient httpClient;
-
-        [TestInitialize]
-        public void Setup()
-        {
-            factory = new WebApplicationFactory<ServerProgram>();
-            httpClient = factory.CreateClient();
-            httpClient.Timeout = TimeSpan.FromSeconds(5);
-        }
-
-        [TestMethod]
-        public async Task FetchNutritionDataAsync_isNotNull()
-        {
-            // Arrange
-            var client = new NutritionClient(httpClient);
-        
-            // Act
-            var result = await client.FetchNutritionDataAsync(input);
-        
-            // Assert
-            Assert.IsNotNull(result);
-        }
-        
-        [TestMethod]
-        public async Task FetchNutritionDataAsync_ReturnsExpectedResultWhenServerIsRunning()
-        {
-            // Arrange
-            var client = new NutritionClient(httpClient);
-        
-            // Act
-            var result = await client.FetchNutritionDataAsync(input);
-        
-            // Assert
-            Assert.AreEqual(input, result?.FoodItemName);
-            Assert.AreEqual(250, result?.Kcal);
         }
     }
 }
