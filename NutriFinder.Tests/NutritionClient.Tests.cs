@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
+using NutriFinder.Server;
 using NutriFinderClient;
+using NutritionDTO = NutriFinderClient.NutritionDTO;
 
 namespace NutriFinder.Tests
 {
@@ -225,13 +227,13 @@ namespace NutriFinder.Tests
     {
         string input = "Banan";
 
-        private WebApplicationFactory<NutriFinder.Server.ServerProgram>? factory;
+        private WebApplicationFactory<ServerProgram>? factory;
         private HttpClient httpClient;
 
         [TestInitialize]
         public void Setup()
         {
-            factory = new WebApplicationFactory<NutriFinder.Server.ServerProgram>();
+            factory = new WebApplicationFactory<ServerProgram>();
             httpClient = factory.CreateClient();
             httpClient.Timeout = TimeSpan.FromSeconds(5);
         }

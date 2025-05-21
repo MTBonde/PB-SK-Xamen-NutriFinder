@@ -65,9 +65,12 @@ public class NutritionClient
     public async Task<NutritionDTO?> FetchNutritionDataAsync(string query)
     {
         //using var http = new HttpClient();
-
-        var response = await httpClient.GetAsync($"/api/nutrition?query={query}");
-
+        
+        var request = $"/api/nutrition?foodItemName={query}";
+        var response = await httpClient.GetAsync(request);
+        
+        Console.WriteLine(response.StatusCode + " with query: " + request);
+        
         if (!response.IsSuccessStatusCode) return null; 
 
         return await response.Content.ReadFromJsonAsync<NutritionDTO>();

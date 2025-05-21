@@ -15,7 +15,7 @@ public class RequestValidator
         if (request.Any(char.IsSymbol))
             return "Request can not contain special characters";
         
-        if (!Regex.IsMatch(request, "^[a-åA-Å ]+$"))
+        if (!Regex.IsMatch(request, "^[a-åA-Å]{1,32}$"))
             return "Only English letters is accepted";
        
         return "ok";

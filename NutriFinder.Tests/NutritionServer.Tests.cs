@@ -64,7 +64,20 @@ namespace NutriFinder.Tests
         {
             // Arrange
             var Request = "@£$";
-            var expected = "Request can not contain special characters";
+            var expectedSpecial = "Request can not contain special characters";
+        
+            // Act
+            var result = validator.Validate(Request);
+    
+            // Assert
+            Assert.AreEqual(result, expectedSpecial);
+        }
+        
+        [TestMethod]
+        public void ValidateRequest_ShouldRejectChineseCharacters()
+        {
+            // Arrange
+            var Request = "鸡肉";
         
             // Act
             var result = validator.Validate(Request);
@@ -73,7 +86,7 @@ namespace NutriFinder.Tests
             Assert.AreEqual(result, expected);
         }
     
-        //Examples of rejection include æ, ø, å, Ô, ò, etc.
+        //Examples of rejection include Ô, ò, etc.
         [TestMethod]
         public void ValidateRequest_ShouldRejectNonAZ()
         {
