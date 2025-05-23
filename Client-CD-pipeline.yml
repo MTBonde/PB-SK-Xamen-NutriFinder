@@ -1,6 +1,7 @@
 # CD pipeline for NutriFinder client
 # This pipeline builds and pushes the NutriFinder Docker image to Docker Hub
 # Triggered automatically when the CI pipeline (BuildAndTest) completes successfully on 'main'
+# - Only include changes on nutrifinderclient path and to pipelines
 
 trigger: none
 pr: none
@@ -17,6 +18,10 @@ resources:
         paths:
           include:
             - NutriFinderClient/**
+            - Client-CD-pipeline.yml
+            - Client-CI-pipeline.yml
+            - Server-CD-pipeline.yml
+            - Server-CI-pipeline.yml
 
 # Use self hosted default agent pool 
 pool:
