@@ -1,5 +1,11 @@
 ﻿version: '3.8'
 
+# Name a shared network for all services
+networks:
+  default:
+    name: nutrifinder-net
+
+# Define our application services
 services:
 #  mongo:
 #    image: mongo

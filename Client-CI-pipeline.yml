@@ -1,8 +1,9 @@
-# CI pipeline for NutriFinder
+# CI pipeline for NutriFinder client
 # Triggers:
 # - Push to main and dev branches 
 # - Pull requests targeting main and dev
 # - trigger on feature branches
+# - Only include chagnes on nutrfinderclient path
 
 trigger:
   branches:
@@ -10,12 +11,19 @@ trigger:
     - main
     - dev
     - feature/*
+  paths:
+    include:
+      - NutriFinderClient/**
+
 
 pr:
   branches:
     include:
     - dev
     - main
+  paths:
+    include:
+      - NutriFinderClient/**
 
 # Use self-hosted agent from default pool
 pool:

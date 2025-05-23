@@ -1,0 +1,68 @@
+# CI pipeline for NutriFinder server
+# Triggers:
+# - Push to main and dev branches 
+# - Pull requests targeting main and dev
+# - trigger on feature branches
+
+trigger:
+  branches:
+    include:
+    - main
+    - dev
+    - feature/*
+  paths:
+    include:
+      - NutriFinder.Server/**
+
+pr:
+  branches:
+    include:
+      - main
+      - dev
+  paths:
+    include:
+      - NutriFinder.Server/**
+
+# Use self-hosted agent from default pool
+pool:
+  name: 'Default'
+
+# Global build configuration setting
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+# 1. Restore NuGet packages for all projects in the solution
+- task: NuGetCommand@2
+  displayName: 'Restore NuGet packages'
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+
+# 2. Build the full solution in Release configuration
+- task: DotNetCoreCLI@2
+  displayName: 'Build solution'
+  inputs:
+    command: 'build'
+    projects: '**/*.sln'
+    arguments: '--configuration $(buildConfiguration)'
+
+# 3. Run all test projects and collect test results and code coverage
+- task: DotNetCoreCLI@2
+  displayName: 'Run unit tests and collect code coverage'
+  inputs:
+    command: 'test'
+    projects: '**/*Tests.csproj'
+    arguments: >
+      --configuration $(buildConfiguration)
+      --collect:"XPlat Code Coverage"
+    publishTestResults: true
+
+# 4. Publish code coverage results to Azure DevOps
+- task: PublishCodeCoverageResults@2
+  displayName: 'Publish code coverage'
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+    pathToSources: '$(Build.SourcesDirectory)'
+    
