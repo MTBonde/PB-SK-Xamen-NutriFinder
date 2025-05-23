@@ -3,7 +3,6 @@
 # - Push to main and dev branches 
 # - Pull requests targeting main and dev
 # - trigger on feature branches
-# - Only include changes on nutrifinderclient path and to pipelines
 
 trigger:
   branches:
@@ -11,26 +10,12 @@ trigger:
     - main
     - dev
     - feature/*
-#  paths:
-#    include:
-#      - NutriFinderClient/**
-#      - Client-CD-pipeline.yml
-#      - Client-CI-pipeline.yml
-#      - Server-CD-pipeline.yml
-#      - Server-CI-pipeline.yml
 
 pr:
   branches:
     include:
     - dev
     - main
-#  paths:
-#    include:
-#      - NutriFinderClient/**
-#      - Client-CD-pipeline.yml
-#      - Client-CI-pipeline.yml
-#      - Server-CD-pipeline.yml
-#      - Server-CI-pipeline.yml
 
 # Use self-hosted agent from default pool
 pool:
