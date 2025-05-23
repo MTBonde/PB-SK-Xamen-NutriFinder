@@ -1,6 +1,7 @@
-# CD pipeline for NutriFinder
+# CD pipeline for NutriFinder server
 # This pipeline builds and pushes the NutriFinder Docker image to Docker Hub
 # Triggered automatically when the CI pipeline (BuildAndTest) completes successfully on 'main'
+# - Only include changes on nutrifinder.Server path and to pipelines
 
 trigger: none
 pr: none
@@ -14,6 +15,13 @@ resources:
         branches:
           include:
             - main
+        paths:
+          include:
+            - NutriFinder.Server/**
+            - Client-CD-pipeline.yml
+            - Client-CI-pipeline.yml
+            - Server-CD-pipeline.yml
+            - Server-CI-pipeline.yml
 
 # Use self hosted default agent pool 
 pool:
@@ -24,7 +32,7 @@ steps:
   - task: CmdLine@2
     displayName: 'Build Docker image'
     inputs:
-      script: docker build -t mtbonde/nutrifinder-client:$(Build.BuildNumber) -t mtbonde/nutrifinder-client:latest -f NutriFinderClient/Dockerfile .
+      script: docker build -t mtbonde/nutrifinder-server:$(Build.BuildNumber) -t mtbonde/nutrifinder-server:latest -f NutriFinder.Server/Dockerfile .
          # . means build from solution root, so path in dockerfile are valid
 
   # Step 2: Login agent and push both tags to Docker Hub
@@ -38,7 +46,7 @@ steps:
   - task: CmdLine@2
     displayName: 'Push image to Docker Hub'
     inputs:
-      script: docker push --all-tags mtbonde/nutrifinder-client
+      script: docker push --all-tags mtbonde/nutrifinder-server
 
   # Step 3: Cleanup to remove unused images from the agent
   - task: CmdLine@2
