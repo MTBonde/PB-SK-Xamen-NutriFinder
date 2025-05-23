@@ -15,19 +15,30 @@ namespace NutriFinder.Database
             _collection = database.GetCollection<NutritionDTO>("Nutrition");
         }
 
-        public Task<NutritionDTO?> GetNutritionDataAsync(string foodItemName)
+        public Task<NutritionDTO> GetNutritionDataAsync(string foodItemName)
         {
-            throw new NotImplementedException();
+            Task<NutritionDTO> result = _collection.Find(x => x.FoodItemName == foodItemName).FirstOrDefaultAsync();
+            
+            Console.WriteLine("has found" + result);
+
+            return result;
         }
 
         public Task SaveNutritionDataAsync(NutritionDTO dto)
         {
-            throw new NotImplementedException();
+            var result = _collection.InsertOneAsync(dto);
+            
+            Console.WriteLine("has saved" + result);
+
+            return result;
         }
 
-        public Task<bool> DoesNutritionExistAsync(string foodItemName)
+        public async Task<bool> DoesNutritionExistAsync(string foodItemName)
         {
-            throw new NotImplementedException();
+            var result = _collection.Find(n => n.FoodItemName == foodItemName).AnyAsync();
+            Console.WriteLine("does exist" +result);
+
+            return await result;
         }
     }
 }

@@ -18,7 +18,7 @@ public interface INutritionRepository
     /// <see cref="NutritionDTO"/> object with the nutrition details of the specified food item,
     /// or null if no data is found.
     /// </returns>
-    Task<NutritionDTO?> GetNutritionDataAsync(string foodItemName);
+    Task<NutritionDTO> GetNutritionDataAsync(string foodItemName);
 
     /// <summary>
     /// Asynchronously saves the nutrition data for a specified food item into the repository.
