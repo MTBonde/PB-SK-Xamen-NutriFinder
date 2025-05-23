@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.TestHost;
+using NutriFinder.Database;
+using NutriFinder.Database.Interfaces;
 using NutriFinder.Server.Helpers;
 using NutriFinder.Server.Interfaces;
 
@@ -9,9 +11,13 @@ namespace NutriFinder.Server
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            const string connectionString = "mongodb://localhost:27017";
+            
             
             builder.Services.AddSingleton<INutritionExternalApi, FakeNutritionExternalApi>();
             builder.Services.AddSingleton<INutritionRepository, FakeNutritionRepository>();
+            //builder.Services.AddSingleton<INutritionRepository>(new MongoNutritionRepository(connectionString));
+            
             builder.Services.AddSingleton<RequestValidator>();
             
             builder.Services.AddControllers();

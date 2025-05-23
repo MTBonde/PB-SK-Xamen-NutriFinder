@@ -6,4 +6,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Nutrifinder.Shared\Nutrifinder.Shared.csproj" />
+      <ProjectReference Include="..\NutriFinderClient\NutriFinderClient.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
+    </ItemGroup>
+
 </Project>

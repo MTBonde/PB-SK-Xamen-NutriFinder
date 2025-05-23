@@ -1,4 +1,6 @@
-using NutriFinder.Server.Interfaces;
+using NutriFinder.Database.Interfaces;
+using NutriFinder.Server;
+using Nutrifinder.Shared;
 
 namespace NutriFinder.Server
 {
@@ -6,7 +8,7 @@ namespace NutriFinder.Server
     {
         private Dictionary<string, NutritionDTO> memory = new();
         
-        public Task<NutritionDTO?> GetNutritionDataAsync(string foodItemName)
+        public Task<NutritionDTO> GetNutritionDataAsync(string foodItemName)
         {
             memory.TryGetValue(foodItemName, out var dto);
             return Task.FromResult(dto);

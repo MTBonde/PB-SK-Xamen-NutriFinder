@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using System.Text.RegularExpressions;
+using Nutrifinder.Shared;
 
 namespace NutriFinderClient;
 

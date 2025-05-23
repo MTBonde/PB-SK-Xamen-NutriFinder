@@ -1,5 +1,6 @@
 using NutriFinder.Server;
 using NutriFinder.Server.Helpers;
+using Nutrifinder.Shared;
 
 namespace NutriFinder.Tests
 {

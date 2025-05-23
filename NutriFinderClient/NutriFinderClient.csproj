@@ -14,4 +14,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Nutrifinder.Shared\Nutrifinder.Shared.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -1,3 +1,5 @@
+using Nutrifinder.Shared;
+
 namespace NutriFinder.Server.Helpers;
 
 public class OutputFormatter
