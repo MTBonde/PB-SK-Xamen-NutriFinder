@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.TestHost;
+using NutriFinder.Database.Interfaces;
 using NutriFinder.Server.Helpers;
 using NutriFinder.Server.Interfaces;
 

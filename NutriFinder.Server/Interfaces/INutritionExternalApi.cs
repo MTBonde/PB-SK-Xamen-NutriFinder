@@ -1,3 +1,4 @@
+using Nutrifinder.Shared;
 using NutriFinderClient;
 
 namespace NutriFinder.Server.Interfaces;

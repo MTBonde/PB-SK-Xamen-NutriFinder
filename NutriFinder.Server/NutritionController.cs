@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using NutriFinder.Database.Interfaces;
 using NutriFinder.Server.Helpers;
 using NutriFinder.Server.Interfaces;
 

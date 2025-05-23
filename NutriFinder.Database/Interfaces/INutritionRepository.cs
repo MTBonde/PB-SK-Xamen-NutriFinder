@@ -1,6 +1,8 @@
-using NutriFinderClient;
 
-namespace NutriFinder.Server.Interfaces;
+
+using Nutrifinder.Shared;
+
+namespace NutriFinder.Database.Interfaces;
 
 /// <summary>
 /// Defines a repository interface for handling nutrition data operations.

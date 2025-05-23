@@ -1,4 +1,4 @@
-namespace NutriFinder.Server
+namespace Nutrifinder.Shared
 {
     public class NutritionDTO
     {

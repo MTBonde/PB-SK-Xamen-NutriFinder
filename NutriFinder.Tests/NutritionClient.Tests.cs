@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using NutriFinder.Server;
+using Nutrifinder.Shared;
 using NutriFinderClient;
-using NutritionDTO = NutriFinderClient.NutritionDTO;
 
 namespace NutriFinder.Tests
 {

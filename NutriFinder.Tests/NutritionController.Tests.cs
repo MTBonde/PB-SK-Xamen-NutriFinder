@@ -3,6 +3,8 @@ using NutriFinder.Server;
 using NutriFinder.Server.Helpers;
 using NutriFinder.Server.Interfaces;
 using Moq;
+using NutriFinder.Database.Interfaces;
+using Nutrifinder.Shared;
 
 namespace NutriFinder.Tests
 {

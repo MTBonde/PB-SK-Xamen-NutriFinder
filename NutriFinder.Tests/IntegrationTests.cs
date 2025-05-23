@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NutriFinder.Server;
 using NutriFinder.Server.Helpers;
+using Nutrifinder.Shared;
 
 namespace NutriFinder.Tests
 {

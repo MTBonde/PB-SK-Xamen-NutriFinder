@@ -1,4 +1,6 @@
-using NutriFinder.Server.Interfaces;
+using NutriFinder.Database.Interfaces;
+using NutriFinder.Server;
+using Nutrifinder.Shared;
 
 namespace NutriFinder.Server
 {
