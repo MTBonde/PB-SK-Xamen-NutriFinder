@@ -8,11 +8,11 @@ namespace NutriFinder.Database
     {
         private IMongoCollection<NutritionDTO> _collection;
 
-        public MongoNutritionRepository()
+        public MongoNutritionRepository(string connectionString = null, string database = "NutriFinder")
         {
-            var client = new MongoClient("mongodb://localhost:27017");
-            var database = client.GetDatabase("NutriFinder");
-            _collection = database.GetCollection<NutritionDTO>("Nutrition");
+            var client = new MongoClient(connectionString);
+            var db = client.GetDatabase(database);
+            _collection = db.GetCollection<NutritionDTO>("Nutrition");
         }
 
         public Task<NutritionDTO> GetNutritionDataAsync(string foodItemName)
