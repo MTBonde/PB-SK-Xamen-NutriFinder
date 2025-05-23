@@ -11,26 +11,26 @@ trigger:
     - main
     - dev
     - feature/*
-  paths:
-    include:
-      - NutriFinderClient/**
-      - Client-CD-pipeline.yml
-      - Client-CI-pipeline.yml
-      - Server-CD-pipeline.yml
-      - Server-CI-pipeline.yml
+#  paths:
+#    include:
+#      - NutriFinderClient/**
+#      - Client-CD-pipeline.yml
+#      - Client-CI-pipeline.yml
+#      - Server-CD-pipeline.yml
+#      - Server-CI-pipeline.yml
 
 pr:
   branches:
     include:
     - dev
     - main
-  paths:
-    include:
-      - NutriFinderClient/**
-      - Client-CD-pipeline.yml
-      - Client-CI-pipeline.yml
-      - Server-CD-pipeline.yml
-      - Server-CI-pipeline.yml
+#  paths:
+#    include:
+#      - NutriFinderClient/**
+#      - Client-CD-pipeline.yml
+#      - Client-CI-pipeline.yml
+#      - Server-CD-pipeline.yml
+#      - Server-CI-pipeline.yml
 
 # Use self-hosted agent from default pool
 pool:
