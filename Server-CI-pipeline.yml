@@ -14,6 +14,10 @@ trigger:
   paths:
     include:
       - NutriFinder.Server/**
+      - Client-CD-pipeline.yml
+      - Client-CI-pipeline.yml
+      - Server-CD-pipeline.yml
+      - Server-CI-pipeline.yml
 
 pr:
   branches:
