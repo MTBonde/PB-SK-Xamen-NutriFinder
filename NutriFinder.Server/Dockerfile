@@ -8,9 +8,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 # Set working directory in container
 WORKDIR /app
 
-# Expose ports (e.g. 8080 for HTTP, 8081 for gRPC or admin endpoints)
-EXPOSE 8080
-EXPOSE 8081
+# Expose ports 
+EXPOSE 5000
 
 
 # ==============================
@@ -25,13 +24,13 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy project file and restore dependencies (enables build caching)
-COPY ["NutriFinderServer/NutriFinderServer.csproj", "NutriFinderServer/"]
-RUN dotnet restore "NutriFinderServer/NutriFinderServer.csproj"
+COPY ["NutriFinder.Server/NutriFinder.Server.csproj", "NutriFinder.Server/"]
+RUN dotnet restore "NutriFinder.Server/NutriFinder.Server.csproj"
 
 # Copy entire source tree and build project
 COPY . .
-WORKDIR "/src/NutriFinderServer"
-RUN dotnet build "./NutriFinderServer.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/NutriFinder.Server"
+RUN dotnet build "./NutriFinder.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 
 # =====================================
@@ -39,7 +38,7 @@ RUN dotnet build "./NutriFinderServer.csproj" -c $BUILD_CONFIGURATION -o /app/bu
 # =====================================
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./NutriFinderServer.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./NutriFinder.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 
 # ===============================
@@ -54,4 +53,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Define entry point for container
-ENTRYPOINT ["dotnet", "NutriFinderServer.dll"]
+ENTRYPOINT ["dotnet", "NutriFinder.Server.dll"]

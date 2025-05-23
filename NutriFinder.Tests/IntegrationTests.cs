@@ -17,7 +17,7 @@ namespace NutriFinder.Tests
         [TestInitialize]
         public void Setup()
         {
-            factory = new WebApplicationFactory<ServerProgram>();
+            factory = new CustomWebApplicationFactory();
             client = factory.CreateClient();
         }
         

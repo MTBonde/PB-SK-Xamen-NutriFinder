@@ -17,8 +17,21 @@ namespace NutriFinder.Tests
 
             builder.ConfigureServices(services =>
             {
+                // Remove real repository
+                var repoDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(INutritionRepository));
+                if (repoDescriptor != null) services.Remove(repoDescriptor);
+
+                // Remove real external API
+                var apiDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(INutritionExternalApi));
+                if (apiDescriptor != null) services.Remove(apiDescriptor);
+
+                // Add fakes
                 services.AddSingleton<INutritionRepository, FakeNutritionRepository>();
+                services.AddSingleton<INutritionExternalApi, FakeNutritionExternalApi>();
             });
+
 
             return base.CreateHost(builder);
         }

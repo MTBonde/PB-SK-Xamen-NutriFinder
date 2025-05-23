@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="ClosedXML" Version="0.105.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4"/>
     </ItemGroup>
@@ -23,5 +24,12 @@
       <ProjectReference Include="..\NutriFinderClient\NutriFinderClient.csproj" />
       <ProjectReference Include="..\NutriFinder.Database\NutriFinder.Database.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="External/Frida_5.3_November2024_Dataset.xlsx">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
 
 </Project>

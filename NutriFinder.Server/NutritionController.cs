@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NutriFinder.Database.Interfaces;
 using NutriFinder.Server.Helpers;
 using NutriFinder.Server.Interfaces;
+using Nutrifinder.Shared;
 
 namespace NutriFinder.Server
 {
@@ -34,8 +35,17 @@ namespace NutriFinder.Server
                 return BadRequest();
             }
             
-            // lookup in Database
-            var dto = await nutritionRepository.GetNutritionDataAsync(foodItemName);
+            // try lookup in Database
+            NutritionDTO dto = null;
+            try
+            {
+                dto = await nutritionRepository.GetNutritionDataAsync(foodItemName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Database error: " + ex.Message);
+            }
+            
             if (dto != null)
                 return Ok(dto);
 
@@ -49,8 +59,18 @@ namespace NutriFinder.Server
                     return NotFound();
                 }
                 
-                // save to local database and return result
-                await nutritionRepository.SaveNutritionDataAsync(fetchedDto);
+                // try save to local database and return result
+                try
+                {
+                    await nutritionRepository.SaveNutritionDataAsync(fetchedDto);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Could not save to DB: " + ex.Message);
+                    return Ok(fetchedDto);
+                }
+                
+                // if we could save return ok and dto
                 return Ok(fetchedDto);
             }
             // catch exception if not available and return 503
@@ -59,6 +79,8 @@ namespace NutriFinder.Server
                 Console.WriteLine(e);
                 return StatusCode(503, "Error: External API is not available and no cached data was found.");
             }
+
+            return StatusCode(500, "Unknown server error.");
         }
     }
 }

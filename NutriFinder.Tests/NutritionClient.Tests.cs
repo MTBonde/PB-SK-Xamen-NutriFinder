@@ -233,7 +233,7 @@ namespace NutriFinder.Tests
         [TestInitialize]
         public void Setup()
         {
-            factory = new WebApplicationFactory<ServerProgram>();
+            factory = new CustomWebApplicationFactory();
             httpClient = factory.CreateClient();
             httpClient.Timeout = TimeSpan.FromSeconds(5);
         }
