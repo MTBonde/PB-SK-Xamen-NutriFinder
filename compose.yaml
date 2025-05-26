@@ -26,6 +26,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Mongo__ConnectionString=mongodb://mongo:27017
 
+# Client
 #  nutrifinderclient:
 #    build:
 #      context: .
