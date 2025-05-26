@@ -36,6 +36,17 @@ steps:
          # . means build from solution root, so path in dockerfile are valid
 
   # Step 2: Login agent and push both tags to Docker Hub
+  - task: PowerShell@2
+    displayName: 'Debug: show token length'
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "Username is: $env:DOCKER_USERNAME"
+        Write-Host "Password Length: $($env:DOCKER_PASSWORD.Length)"
+    env:
+      DOCKER_USERNAME: $(DOCKER_USERNAME)
+      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+
   - task: CmdLine@2
     displayName: 'Docker login'
     inputs:
