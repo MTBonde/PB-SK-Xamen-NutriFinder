@@ -8,12 +8,13 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
+        bool shouldLoop = true;
         var client = new NutritionClient();
 
-        while (true)
+        while (shouldLoop)
         {
             // ask user for input
-            Console.WriteLine(" Enter food item in english");
+            Console.WriteLine("Enter food item in english");
             var userInput = Console.ReadLine();
             var validationResult = client.ValidateInput(userInput);
             
@@ -53,9 +54,39 @@ public class Program
                 Console.WriteLine("Failed to fetch data.");
                 continue;
             }
-
-            Console.WriteLine(client.FormatNutritionOutput(dto));
-            break;
+            
+            Console.WriteLine(client.FormatNutritionOutput(dto) + "\n");
+            
+            //Wants to loop? 
+            Console.WriteLine("Would you like to fetch another food item? (y/n)");
+            bool inputValid = false;
+            
+            while (inputValid == false)
+            {
+                var loopInput = Console.ReadLine();
+                
+                if (loopInput == "y")
+                {
+                    //Loop
+                    inputValid = true;
+                    shouldLoop = true;
+                }
+                else if (loopInput == "n")
+                {
+                    inputValid = true;
+                    shouldLoop = false;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input! Please only type Y or N!");
+                    inputValid = false;
+                }
+            }
+            
+            if(shouldLoop == false)
+            {
+                break;
+            }
         }
     }
 }
