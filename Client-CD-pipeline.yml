@@ -15,13 +15,13 @@ resources:
         branches:
           include:
             - main
-        paths:
-          include:
-            - NutriFinderClient/**
-            - Client-CD-pipeline.yml
-            - Client-CI-pipeline.yml
-            - Server-CD-pipeline.yml
-            - Server-CI-pipeline.yml
+#        paths:
+#          include:
+#            - NutriFinderClient/**
+#            - Client-CD-pipeline.yml
+#            - Client-CI-pipeline.yml
+#            - Server-CD-pipeline.yml
+#            - Server-CI-pipeline.yml
 
 # Use self hosted default agent pool 
 pool:
