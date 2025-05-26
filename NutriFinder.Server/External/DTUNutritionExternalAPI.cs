@@ -21,12 +21,13 @@ namespace NutriFinder.Server.External
         // Mapping from Excel parameter names to DTO properties.
         private static readonly Dictionary<string, string> ExternalParameterToDtoFieldMapping = new()
         {
-            { "Carbohydrate, available", "Carb" },
+            { "Available carbohydrates", "Carb" },
             { "Dietary fibre", "Fiber" },
             { "Protein", "Protein" },
             { "Fat", "Fat" },
             { "Energy (kcal)", "Kcal" }
         };
+        
 
         private readonly string _filePath;
 
@@ -69,6 +70,12 @@ namespace NutriFinder.Server.External
                     var foodTable = foodSheet.RangeUsed().AsTable();
 
                     var trimmedFoodName = foodItemName.Trim();
+
+                    foreach (var row in foodTable.DataRange.Rows())
+                    {
+                        var name = row.Field(FoodNameColumn)?.GetString()?.Trim();
+                        Console.WriteLine($"Found food name: '{name}'");
+                    }
 
                     // Try partial match 
                     var foodRow = foodTable.DataRange.Rows()
