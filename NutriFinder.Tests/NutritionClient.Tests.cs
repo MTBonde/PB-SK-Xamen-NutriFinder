@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
+using NutriFinder.Server;
+using Nutrifinder.Shared;
 using NutriFinderClient;
 
 namespace NutriFinder.Tests
@@ -225,13 +227,13 @@ namespace NutriFinder.Tests
     {
         string input = "Banan";
 
-        private WebApplicationFactory<NutriFinder.Server.ServerProgram>? factory;
+        private WebApplicationFactory<ServerProgram>? factory;
         private HttpClient httpClient;
 
         [TestInitialize]
         public void Setup()
         {
-            factory = new WebApplicationFactory<NutriFinder.Server.ServerProgram>();
+            factory = new CustomWebApplicationFactory();
             httpClient = factory.CreateClient();
             httpClient.Timeout = TimeSpan.FromSeconds(5);
         }

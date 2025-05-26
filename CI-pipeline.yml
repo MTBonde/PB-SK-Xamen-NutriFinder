@@ -1,4 +1,4 @@
-# CI pipeline for NutriFinder
+# CI pipeline for NutriFinder client
 # Triggers:
 # - Push to main and dev branches 
 # - Pull requests targeting main and dev

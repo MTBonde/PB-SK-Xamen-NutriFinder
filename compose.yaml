@@ -1,26 +1,34 @@
-﻿version: '3.8'
+﻿# Docker compose for running server and moongo db 
+# to use: "Banandocker-compose up -d"
 
+# Name a shared network for all services
+networks:
+  default:
+    name: nutrifinder-net
+
+# Define our application services
 services:
-#  mongo:
-#    image: mongo
-#    ports:
-#      - "27017:27017"
-#    container_name: nutrifinder-mongo
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    container_name: nutrifinder-mongo
 
-#  nutrifinderserver:
-#    build:
-#      context: .
-#      dockerfile: NutriFinderServer/Dockerfile
-#    ports:
-#      - "5000:8080"
-#    depends_on:
-#      - mongo
-#    environment:
-#      - Mongo__ConnectionString=mongodb://mongo:27017
-
-  nutrifinderclient:
+  nutrifinderserver:
     build:
       context: .
-      dockerfile: NutriFinderClient/Dockerfile
+      dockerfile: NutriFinder.Server/Dockerfile
+    ports:
+      - "5000:5000"
     depends_on:
-      - nutrifinderserver
+      - mongo
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Mongo__ConnectionString=mongodb://mongo:27017
+
+#  nutrifinderclient:
+#    build:
+#      context: .
+#      dockerfile: NutriFinderClient/Dockerfile
+#    depends_on:
+#      - nutrifinderserver

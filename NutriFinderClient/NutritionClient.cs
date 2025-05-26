@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using System.Text.RegularExpressions;
+using Nutrifinder.Shared;
 
 namespace NutriFinderClient;
 
@@ -9,7 +10,10 @@ public class NutritionClient
 
     public NutritionClient()
     {
-        
+        httpClient = new HttpClient
+        {
+            BaseAddress = new Uri("http://localhost:5000") 
+        };
     }
     
     public NutritionClient(HttpClient httpClient)
@@ -31,7 +35,7 @@ public class NutritionClient
         // if (!input.Any(char.IsAsciiLetter)) 
         //     return "Input can only be A-Z with no tone indicators";
         
-       if (!Regex.IsMatch(input, "^[a-åA-Å ]+$"))
+       if (!Regex.IsMatch(input, "^[a-åA-Å ,]+$"))
            return "Only English letters is accepted";
        
        return "ok";
@@ -65,9 +69,12 @@ public class NutritionClient
     public async Task<NutritionDTO?> FetchNutritionDataAsync(string query)
     {
         //using var http = new HttpClient();
-
-        var response = await httpClient.GetAsync($"/api/nutrition?query={query}");
-
+        
+        var request = $"/api/nutrition?foodItemName={query}";
+        var response = await httpClient.GetAsync(request);
+        
+        Console.WriteLine(response.StatusCode + " with query: " + request);
+        
         if (!response.IsSuccessStatusCode) return null; 
 
         return await response.Content.ReadFromJsonAsync<NutritionDTO>();
