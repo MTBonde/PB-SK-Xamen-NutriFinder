@@ -10,7 +10,10 @@ public class NutritionClient
 
     public NutritionClient()
     {
-        
+        httpClient = new HttpClient
+        {
+            BaseAddress = new Uri("http://localhost:5000") 
+        };
     }
     
     public NutritionClient(HttpClient httpClient)
@@ -32,7 +35,7 @@ public class NutritionClient
         // if (!input.Any(char.IsAsciiLetter)) 
         //     return "Input can only be A-Z with no tone indicators";
         
-       if (!Regex.IsMatch(input, "^[a-åA-Å ]+$"))
+       if (!Regex.IsMatch(input, "^[a-åA-Å ,]+$"))
            return "Only English letters is accepted";
        
        return "ok";

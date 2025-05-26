@@ -16,13 +16,13 @@ namespace NutriFinder.Server
 
         public Task SaveNutritionDataAsync(NutritionDTO dto)
         {
-            memory[dto.FoodItemName.ToLower()] = dto;
+            memory[dto.FoodItemName] = dto;
             return Task.CompletedTask;
         }
 
         public Task<bool> DoesNutritionExistAsync(string foodItemName)
         {
-            return Task.FromResult(memory.ContainsKey(foodItemName.ToLower()));
+            return Task.FromResult(memory.ContainsKey(foodItemName));
         }
     }
 }
