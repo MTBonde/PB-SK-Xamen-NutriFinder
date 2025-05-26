@@ -70,14 +70,14 @@ namespace NutriFinder.Server.External
 
                     var trimmedFoodName = foodItemName.Trim();
 
-                    // Find matching Food row by English name.
+                    // Try partial match 
                     var foodRow = foodTable.DataRange.Rows()
-                        .FirstOrDefault(r =>
-                            string.Equals(
-                                r.Field(FoodNameColumn)?.GetString()?.Trim(),
-                                trimmedFoodName,
-                                StringComparison.OrdinalIgnoreCase)
-                        );
+                        .FirstOrDefault(r => r.Field(FoodNameColumn)
+                            ?.GetString()
+                            ?.Trim()
+                            .IndexOf(trimmedFoodName,
+                                StringComparison.OrdinalIgnoreCase) >= 0);
+
 
                     if (foodRow == null)
                     {
