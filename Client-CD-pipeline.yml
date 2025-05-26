@@ -36,13 +36,18 @@ steps:
          # . means build from solution root, so path in dockerfile are valid
 
   # Step 2: Login agent and push both tags to Docker Hub
-  - task: CmdLine@2
-    displayName: 'Docker login'
+  - task: PowerShell@2
+    displayName: 'Docker login (PowerShell)'
     inputs:
-      script: docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%
+      targetType: 'inline'
+      script: |
+        echo "Attempting Docker login for user: $env:DOCKER_USERNAME"
+        echo $env:DOCKER_PASSWORD | docker login -u $env:DOCKER_USERNAME --password-stdin
     env:
       DOCKER_USERNAME: $(DOCKER_USERNAME)
       DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+
+
   - task: CmdLine@2
     displayName: 'Push image to Docker Hub'
     inputs:
