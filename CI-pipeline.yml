@@ -41,22 +41,27 @@ steps:
     projects: '**/*.sln'
     arguments: '--configuration $(buildConfiguration)'
 
-# 3. Run all test projects and collect test results and code coverage
+# 3. Run all test projects and enforce test results and code coverage
 - task: DotNetCoreCLI@2
-  displayName: 'Run unit tests and collect code coverage'
+  displayName: 'Run unit tests and enforce code coverage threshold'
   inputs:
     command: 'test'
     projects: '**/*Tests.csproj'
     arguments: >
       --configuration $(buildConfiguration)
-      --collect:"XPlat Code Coverage"
+      /p:CollectCoverage=true
+      /p:CoverletOutputFormat=cobertura
+      /p:CoverletOutput=$(Agent.TempDirectory)/coverage/
+      /p:Threshold=80
+      /p:ThresholdType=line
+      /p:ThresholdStat=total
     publishTestResults: true
-
-# 4. Publish code coverage results to Azure DevOps
+  
+  # 4. Publish code coverage results to Azure DevOps
 - task: PublishCodeCoverageResults@2
   displayName: 'Publish code coverage'
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+    summaryFileLocation: '$(Agent.TempDirectory)/coverage/coverage.cobertura.xml'
     pathToSources: '$(Build.SourcesDirectory)'
     

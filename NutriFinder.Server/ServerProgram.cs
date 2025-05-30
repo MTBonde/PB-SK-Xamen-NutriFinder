@@ -24,7 +24,9 @@ namespace NutriFinder.Server
             var builder = WebApplication.CreateBuilder(args);
             
             //builder.Services.AddSingleton<INutritionExternalApi, FakeNutritionExternalApi>();
-            builder.Services.AddSingleton<INutritionExternalApi>(new DTUNutritionExternalAPI(FRIDAPATH));
+            builder.Services.AddSingleton<IExcelNutritionReader>(new ExcelNutritionReader(FRIDAPATH));
+            builder.Services.AddSingleton<INutritionExternalApi, DTUNutritionExternalAPI>();
+
 
             //builder.Services.AddSingleton<INutritionRepository, FakeNutritionRepository>();
             builder.Services.AddSingleton<INutritionRepository>(new MongoNutritionRepository(connectionString));
