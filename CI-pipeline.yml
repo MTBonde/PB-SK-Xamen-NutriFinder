@@ -52,7 +52,7 @@ steps:
       /p:CollectCoverage=true
       /p:CoverletOutputFormat=cobertura
       /p:CoverletOutput=$(Agent.TempDirectory)/coverage/
-      /p:Threshold=50
+      /p:Threshold=80
       /p:ThresholdType=line
       /p:ThresholdStat=total
     publishTestResults: true
