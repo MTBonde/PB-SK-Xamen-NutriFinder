@@ -26,61 +26,64 @@ namespace NutriFinder.Server
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]string foodItemName)
+        public async Task<IActionResult> Get([FromQuery] string foodItemName)
         {
-            // EO; input validation
+            Console.WriteLine($"[Controller] Received request for: '{foodItemName}'");
+
             var validationResult = requestValidator.Validate(foodItemName);
             if (validationResult != "ok")
             {
+                Console.WriteLine($"[Controller] Validation failed for: '{foodItemName}' → {validationResult}");
                 return BadRequest();
             }
-            
-            // try lookup in Database
+
             NutritionDTO dto = null;
             try
             {
+                Console.WriteLine($"[Controller] Attempting DB lookup for: '{foodItemName}'");
                 dto = await nutritionRepository.GetNutritionDataAsync(foodItemName);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Database error: " + ex.Message);
+                Console.WriteLine($"[Controller] Database error during lookup for '{foodItemName}': {ex.Message}");
             }
-            
-            if (dto != null)
-                return Ok(dto);
 
-            // try lookup with external api
+            if (dto != null)
+            {
+                Console.WriteLine($"[Controller] Found in DB: '{foodItemName}'");
+                return Ok(dto);
+            }
+
             try
             {
-                //Attempt fetch of data from external
+                Console.WriteLine($"[Controller] Not found in DB. Trying external API for: '{foodItemName}'");
                 var fetchedDto = await _nutritionExternalApi.FetchNutritionDataAsync(foodItemName);
+
                 if (fetchedDto == null)
                 {
+                    Console.WriteLine($"[Controller] Not found in external API: '{foodItemName}'");
                     return NotFound();
                 }
-                
-                // try save to local database and return result
+
                 try
                 {
+                    Console.WriteLine($"[Controller] Saving fetched result to DB for: '{foodItemName}'");
                     await nutritionRepository.SaveNutritionDataAsync(fetchedDto);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Could not save to DB: " + ex.Message);
+                    Console.WriteLine($"[Controller] Could not save to DB for '{foodItemName}': {ex.Message}");
                     return Ok(fetchedDto);
                 }
-                
-                // if we could save return ok and dto
+
+                Console.WriteLine($"[Controller] Successfully fetched and saved: '{foodItemName}'");
                 return Ok(fetchedDto);
             }
-            // catch exception if not available and return 503
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine($"[Controller] External API failed for '{foodItemName}': {e.Message}");
                 return StatusCode(503, "Error: External API is not available and no cached data was found.");
             }
-
-            return StatusCode(500, "Unknown server error.");
         }
     }
 }
