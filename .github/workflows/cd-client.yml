@@ -1,14 +1,15 @@
 name: CD – Client
 
 on:
-  workflow_run:
-    workflows: [ Build and Test ]
-    types:
-      - completed
+  push:
+    branches:
+      - main
+    paths:
+      - 'NutriFinderClient/**'
+      - '.github/workflows/cd-client.yml'
 
 jobs:
   build-and-push-client:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -25,14 +26,15 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push NutriFinderClient
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
-          context: .
+          context: NutriFinderClient
           file: NutriFinderClient/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/nutrifinder-client:latest
             ${{ secrets.DOCKER_USERNAME }}/nutrifinder-client:${{ github.run_number }}
-
+            ${{ secrets.DOCKER_USERNAME }}/nutrifinder-client:${{ github.sha }}      
+      
       - name: Cleanup
         run: docker image prune -a -f
