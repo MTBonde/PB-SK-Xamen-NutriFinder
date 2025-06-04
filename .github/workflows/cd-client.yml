@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'NutriFinderClient/**'
-      - '.github/workflows/cd-client.yml'
 
 jobs:
   build-and-push-client:
@@ -25,16 +22,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push NutriFinderClient
+      - name: Build and push NutriFinder Client image
         uses: docker/build-push-action@v6
         with:
-          context: NutriFinderClient
+          context: .
           file: NutriFinderClient/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/nutrifinder-client:latest
-            ${{ secrets.DOCKER_USERNAME }}/nutrifinder-client:${{ github.run_number }}
-            ${{ secrets.DOCKER_USERNAME }}/nutrifinder-client:${{ github.sha }}      
-      
+            ${{ secrets.DOCKER_USERNAME }}/nutrifinder-server:${{ github.run_number }}
+            ${{ secrets.DOCKER_USERNAME }}/nutrifinder-client:${{ github.sha }}
+
       - name: Cleanup
-        run: docker image prune -a -f
+        run: docker image prune -f
