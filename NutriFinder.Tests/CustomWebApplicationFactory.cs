@@ -11,9 +11,8 @@ namespace NutriFinder.Tests
     {
         protected override IHost CreateHost(IHostBuilder builder)
         {
-            var binDir = AppContext.BaseDirectory;
-            var projectRoot = Path.GetFullPath(Path.Combine(binDir, @"..\..\..\..\NutriFinder.Server\"));
-            builder.UseContentRoot(projectRoot);
+            var currentDirectory = Directory.GetCurrentDirectory();
+            builder.UseContentRoot(currentDirectory);
 
             builder.ConfigureServices(services =>
             {
