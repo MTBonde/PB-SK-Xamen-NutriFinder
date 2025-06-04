@@ -100,9 +100,9 @@ namespace NutriFinder.Tests
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
             
             var dto = await result.Content.ReadFromJsonAsync<NutritionDTO>();
-             Assert.AreEqual(input, dto?.FoodItemName);
-             Assert.AreEqual(250, dto?.Kcal);
-             Assert.AreEqual(10, dto?.Fiber);
+            Assert.AreEqual(input, dto?.FoodItemName);
+            Assert.AreEqual(250, dto?.Kcal);
+            Assert.AreEqual(10, dto?.Fiber);
         }
         
         [TestMethod]

@@ -3,10 +3,31 @@ using DotNet.Testcontainers.Containers;
 using MongoDB.Driver;
 using Moq;
 using NutriFinder.Database;
+using NutriFinder.Database.Interfaces;
+using NutriFinder.Server;
 using Nutrifinder.Shared;
 
 namespace NutriFinder.Tests
 {
+    [TestClass]
+    public class NutritionRepositoryContractTests
+    {
+        [TestMethod]
+        public async Task FakeRepository_ShouldFulfill_INutritionRepository_Contract()
+        {
+            INutritionRepository repo = new FakeNutritionRepository();
+            var dto = new NutritionDTO { FoodItemName = "Pear", Kcal = 88 };
+
+            await repo.SaveNutritionDataAsync(dto);
+
+            var exists = await repo.DoesNutritionExistAsync("Pear");
+            Assert.IsTrue(exists);
+
+            var loaded = await repo.GetNutritionDataAsync("Pear");
+            Assert.IsNotNull(loaded);
+            Assert.AreEqual(dto.Kcal, loaded.Kcal);
+        }
+    }
     [TestClass]
     public class NutritionDBUnitTests
     {
