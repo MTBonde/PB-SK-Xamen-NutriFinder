@@ -9,7 +9,7 @@ networks:
 # Define our application services
 services:
   mongo:
-    image: mongo
+    image: mongo:7.0.21-jammy
     ports:
       - "27017:27017"
     container_name: nutrifinder-mongo
