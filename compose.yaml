@@ -1,5 +1,5 @@
-﻿# Docker compose for running server and moongo db 
-# to use: "Banandocker-compose up -d"
+﻿# Development Docker compose for running server and mongo db 
+# to use: "docker-compose up -d"
 
 # Name a shared network for all services
 networks:
@@ -9,7 +9,7 @@ networks:
 # Define our application services
 services:
   mongo:
-    image: mongo
+    image: mongo:7.0.21
     ports:
       - "27017:27017"
     container_name: nutrifinder-mongo
@@ -25,11 +25,3 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Mongo__ConnectionString=mongodb://mongo:27017
-
-# Client
-#  nutrifinderclient:
-#    build:
-#      context: .
-#      dockerfile: NutriFinderClient/Dockerfile
-#    depends_on:
-#      - nutrifinderserver

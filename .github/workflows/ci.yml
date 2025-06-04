@@ -14,19 +14,27 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
 
+    env:
+      DOTNET_VERSION: '9.0.x'
+      BUILD_CONFIG: 'Debug'
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build --no-restore
+      - name: Build solution
+        run: dotnet build --no-restore --configuration ${{ env.BUILD_CONFIG }}
+
+      - name: Pre-pull Mongo image to avoid Testcontainers CI pull failure
+        run: docker pull mongo:7.0.21
 
       - name: Run tests
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --no-build --configuration ${{ env.BUILD_CONFIG }} --verbosity normal
