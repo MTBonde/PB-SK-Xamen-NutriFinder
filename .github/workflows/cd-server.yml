@@ -25,13 +25,13 @@ jobs:
       - name: Build and push NutriFinder Server image
         uses: docker/build-push-action@v6
         with:
-          context: NutriFinder.Server
+          context: .
           file: NutriFinder.Server/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/nutrifinder-server:latest
-            ${{ secrets.DOCKER_USERNAME }}/nutrifinder-server:main
+            ${{ secrets.DOCKER_USERNAME }}/nutrifinder-server:${{ github.run_number }}
             ${{ secrets.DOCKER_USERNAME }}/nutrifinder-server:${{ github.sha }}
 
       - name: Cleanup
-        run: docker image prune -a -f
+        run: docker image prune -f
