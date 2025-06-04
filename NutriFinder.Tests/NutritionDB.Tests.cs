@@ -58,7 +58,7 @@ namespace NutriFinder.Tests
         public void Setup()
         {
             container = new ContainerBuilder()
-                .WithImage("mongo:7.0.21-jammy")
+                .WithImage("mongo:7.0.21")
                 .WithPortBinding(27017, true)
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(27017))
                 .Build();
