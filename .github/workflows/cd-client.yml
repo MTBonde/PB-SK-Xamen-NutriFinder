@@ -30,7 +30,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/nutrifinder-client:latest
-            ${{ secrets.DOCKER_USERNAME }}/nutrifinder-server:${{ github.run_number }}
+            ${{ secrets.DOCKER_USERNAME }}/nutrifinder-client:${{ github.run_number }}
             ${{ secrets.DOCKER_USERNAME }}/nutrifinder-client:${{ github.sha }}
 
       - name: Cleanup
