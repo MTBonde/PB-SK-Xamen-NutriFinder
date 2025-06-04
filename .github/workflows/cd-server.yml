@@ -1,14 +1,12 @@
 name: CD – Server
 
 on:
-  workflow_run:
-    workflows: [ Build and Test ]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 
 jobs:
   build-and-push-server:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -24,8 +22,8 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push NutriFinder.Server
-        uses: docker/build-push-action@v5
+      - name: Build and push NutriFinder Server image
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: NutriFinder.Server/Dockerfile
@@ -33,6 +31,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/nutrifinder-server:latest
             ${{ secrets.DOCKER_USERNAME }}/nutrifinder-server:${{ github.run_number }}
+            ${{ secrets.DOCKER_USERNAME }}/nutrifinder-server:${{ github.sha }}
 
       - name: Cleanup
-        run: docker image prune -a -f
+        run: docker image prune -f
