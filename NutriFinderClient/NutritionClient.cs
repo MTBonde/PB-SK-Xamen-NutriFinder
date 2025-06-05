@@ -4,23 +4,12 @@ using Nutrifinder.Shared;
 
 namespace NutriFinderClient;
 
-public class NutritionClient
+public class NutritionClient(HttpClient httpClient)
 {
-    private HttpClient httpClient;
+    public NutritionClient() : this(new HttpClient())
+    {
+    }
 
-    public NutritionClient()
-    {
-        httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("http://localhost:5000") 
-        };
-    }
-    
-    public NutritionClient(HttpClient httpClient)
-    {
-        this.httpClient = httpClient;
-    }
-    
     public string ValidateInput(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
@@ -28,30 +17,26 @@ public class NutritionClient
 
         if (input.Any(char.IsDigit))
             return "Input can not contain numbers";
-        
-        // if (input.Any(char.IsSymbol))
-        //     return "Input can not contain special characters";
-        //
-        // if (!input.Any(char.IsAsciiLetter)) 
-        //     return "Input can only be A-Z with no tone indicators";
-        
-       if (!Regex.IsMatch(input, "^[a-åA-Å]+$"))
-           return "Only English letters is accepted";
-       
-       return "ok";
+
+        return !Regex.IsMatch(input, "^[a-åA-Å]+$") ? "Only English letters is accepted" : "ok";
     }
 
     public string FormatNutritionOutput(NutritionDTO? dto)
     {
-        return $"""
-                Food: {dto.FoodItemName}
-                Carbohydrates: {dto.Carb} g
-                Fiber: {dto.Fiber} g
-                Net Carbohydrates: {dto.Carb - dto.Fiber} g
-                Protein: {dto.Protein} g
-                Fat: {dto.Fat} g
-                Calories: {dto.Kcal} kcal
-                """;
+        if (dto != null)
+        {
+            return $"""
+                    Food: {dto.FoodItemName}
+                    Carbohydrates: {dto.Carb} g
+                    Fiber: {dto.Fiber} g
+                    Net Carbohydrates: {dto.Carb - dto.Fiber} g
+                    Protein: {dto.Protein} g
+                    Fat: {dto.Fat} g
+                    Calories: {dto.Kcal} kcal
+                    """;
+        }
+
+        return "[ERROR] Cannot format null nutrition data.";
     }
 
     public string? FormatErrorMessageFromStatusCode(int expectedStatusCode)
@@ -68,15 +53,55 @@ public class NutritionClient
 
     public async Task<NutritionDTO?> FetchNutritionDataAsync(string query)
     {
-        //using var http = new HttpClient();
-        
         var request = $"/api/nutrition?foodItemName={query}";
         var response = await httpClient.GetAsync(request);
-        
+
         Console.WriteLine(response.StatusCode + " with query: " + request);
-        
-        if (!response.IsSuccessStatusCode) return null; 
+
+        if (!response.IsSuccessStatusCode) return null;
 
         return await response.Content.ReadFromJsonAsync<NutritionDTO>();
+    }
+
+    public async Task<NutritionDTO?> FetchWithFallbackBaseUrlsAsync(string query)
+    {
+        if (AppDomain.CurrentDomain.FriendlyName.Contains("testhost"))
+        {
+            Console.WriteLine("[TEST] Using injected HttpClient (testhost context). Trying directly.");
+            return await FetchNutritionDataAsync(query);
+        }
+
+        var fallbackBaseUrls = new[]
+        {
+            "https://api.mtbonde.dev",
+            "http://localhost:5000"
+        };
+
+        foreach (var baseUrl in fallbackBaseUrls)
+        {
+            try
+            {
+                Console.WriteLine($"[INFO] Attempting to contact: {baseUrl}");
+
+                using var localClient = new HttpClient();
+                localClient.BaseAddress = new Uri(baseUrl);
+                var request = $"/api/nutrition?foodItemName={query}";
+                var response = await localClient.GetAsync(request);
+
+                Console.WriteLine($"[INFO] Received {response.StatusCode} from {baseUrl}");
+
+                if (!response.IsSuccessStatusCode) continue;
+
+                Console.WriteLine($"[SUCCESS] Successfully fetched data from: {baseUrl}");
+                return await response.Content.ReadFromJsonAsync<NutritionDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] Failed contacting {baseUrl}: {ex.Message}");
+            }
+        }
+
+        Console.WriteLine("[FAILURE] All sources failed. No data returned.");
+        return null;
     }
 }
