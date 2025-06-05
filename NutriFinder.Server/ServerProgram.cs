@@ -46,27 +46,16 @@ namespace NutriFinder.Server
             // Route endpoints
             app.MapControllers();
             
+            app.MapGet("/", () =>
+            {
+                return Results.Json(new
+                {
+                    status = "NutriFinder API online",
+                    version = "1.0.0"
+                });
+            });
+            
             app.Run();
-            
-
-            // 
-            //
-            // app.MapGet("/api/nutrition", (string query) =>
-            // {
-            //     var response = new
-            //     {
-            //         FoodItemName = query,
-            //         Carb = 100,
-            //         Fiber = 10,
-            //         Protein = 5,
-            //         Fat = 1,
-            //         Kcal = 250,
-            //     };
-            //
-            //     return Results.Ok(response);
-            // });
-
-            
         }
     }
 }
