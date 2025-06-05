@@ -10,77 +10,56 @@ public class Program
     {
         bool shouldLoop = true;
         var client = new NutritionClient();
-        
+
         Console.WriteLine("Hello and welcome to NutriFinder!\n" +
                           "Simply type any food item you wish to retrieve nutritional data about the desired food!\n");
 
         while (shouldLoop)
         {
-            // ask user for input
             Console.WriteLine("Enter food item in english:");
             var userInput = Console.ReadLine();
-            
+
+            if (userInput == null)
+            {
+                Console.WriteLine("No input received – please try again.\n");
+                continue;
+            }
+
             Console.WriteLine();
-            
+
             var validationResult = client.ValidateInput(userInput);
-            
-            // EO; if not valid
+
             if (validationResult != "ok")
             {
                 Console.WriteLine($"Input error: {validationResult}");
                 continue;
             }
-            
-            /*// fake HTTP-Respons
-            var statusCode; 
-            NutritionDTO? nutritionData = new NutritionDTO
-            {
-                FoodItemName = userInput,
-                Carb = 100,
-                Fiber = 10,
-                Protein = 5,
-                Fat = 1,
-                Kcal = 250,
-            };
-            
-            if (statusCode == 200 && nutritionData != null)
-            {
-                Console.WriteLine(client.FormatNutritionOutput(nutritionData));
-                break;
-            }
-            else
-            {
-                Console.WriteLine(client.FormatErrorMessageFromStatusCode(statusCode));
-            }*/
-            
-            // NutritionDTO? dto = await client.FetchNutritionDataAsync(userInput);
+
             var dto = await FetchWithAnimationAsync(client, userInput);
-    
+
             if (dto == null)
             {
                 Console.WriteLine("Failed to fetch data! Please try again!\n" +
                                   "(Did you spell the food item correctly?)\n");
                 continue;
             }
-            
+
             Console.WriteLine("-------------------------------------");
-            
+
             Console.WriteLine("Results: \n");
             Console.WriteLine(client.FormatNutritionOutput(dto) + "\n");
-            
+
             Console.WriteLine("-------------------------------------");
-            
-            //Wants to loop? 
+
             Console.WriteLine("Would you like to fetch another food item? (y/n)");
             bool inputValid = false;
-            
-            while (inputValid == false)
+
+            while (!inputValid)
             {
                 var loopInput = Console.ReadLine();
-                
+
                 if (loopInput == "y")
                 {
-                    //Loop
                     inputValid = true;
                     shouldLoop = true;
                     Console.WriteLine();
@@ -97,59 +76,57 @@ public class Program
                     inputValid = false;
                 }
             }
-            
-            if(shouldLoop == false)
+
+            if (!shouldLoop)
             {
                 break;
             }
         }
     }
 
-    static async Task<NutritionDTO?> FetchWithAnimationAsync(NutritionClient client, string userInput, int timeoutSeconds = 30)
+    private static async Task<NutritionDTO?> FetchWithAnimationAsync(NutritionClient client, string userInput, int timeoutSeconds = 30)
     {
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeoutSeconds));
-    
-        // Start animation i en separat task
+        var token = cts.Token;
+
         var animationTask = Task.Run(async () =>
         {
             try
             {
                 int animFrame = 0;
-                while (!cts.Token.IsCancellationRequested)
+                while (!token.IsCancellationRequested)
                 {
                     Console.Write("\rFetching data" + new string('.', animFrame));
                     Console.Write(new string(' ', 3 - animFrame));
                     animFrame = (animFrame + 1) % 4;
-                    await Task.Delay(300, cts.Token);
+                    await Task.Delay(300, token);
                 }
             }
             catch (OperationCanceledException)
             {
-                // Ignorer TaskCanceledException her - det er forventet når vi afbryder
+                // expected
             }
-        });
+        }, token);
 
         try
         {
-            // Hent data
-            var dto = await client.FetchNutritionDataAsync(userInput);
-        
-            // Stop animationen og ryd op
+            var dto = await client.FetchWithFallbackBaseUrlsAsync(userInput);
+
             cts.Cancel();
             await animationTask;
             Console.WriteLine();
-        
+
+            Console.WriteLine(dto != null
+                ? "[INFO] Data fetch complete."
+                : "[WARN] No data could be retrieved from any source.");
+
             return dto;
         }
         catch (Exception ex)
         {
-            // Stop animationen og ryd op
             cts.Cancel();
-            await animationTask;
             Console.WriteLine();
-        
-            // Log fejlen hvis nødvendigt
-            Console.WriteLine($"\nFejl ved hentning af data: {ex.Message}");
+            Console.WriteLine($"\n[ERROR] Exception during fetch: {ex.Message}");
             return null;
         }
     }
