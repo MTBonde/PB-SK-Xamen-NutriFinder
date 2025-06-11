@@ -1,67 +1,76 @@
-# CI pipeline for NutriFinder client
+# CI pipeline for NutriFinder application - Continuous Integration
+# This pipeline handles building, testing, and code coverage for the entire solution
 # Triggers:
 # - Push to main and dev branches 
 # - Pull requests targeting main and dev
-# - trigger on feature branches
+# - Trigger on feature branches for early validation
 
+# Define when this pipeline should automatically run
 trigger:
   branches:
     include:
-    - main
-    - dev
-    - feature/*
+    - main          # Runs on pushes to main branch
+    - dev           # Runs on pushes to dev branch  
+    - feature/*     # Runs on pushes to any feature branch
 
+# Define when this pipeline should run for pull requests
 pr:
   branches:
     include:
-    - dev
-    - main
+    - dev           # Runs on PRs targeting dev branch
+    - main          # Runs on PRs targeting main branch
 
-# Use self-hosted agent from default pool
+# Specify which agent pool to use for running this pipeline
+# Using self-hosted agent from default pool
 pool:
-  name: 'Default'
+  name: 'Default'   # Name of the agent pool configured in Azure DevOps
 
-# Global build configuration setting
+# Define global variables available to all steps in this pipeline
 variables:
-  buildConfiguration: 'Release'
+  buildConfiguration: 'Release'  # Build configuration to use (Release vs Debug)
 
+# Define the sequence of steps to execute in this pipeline
 steps:
-# 1. Restore NuGet packages for all projects in the solution
-- task: NuGetCommand@2
-  displayName: 'Restore NuGet packages'
+# Step 1: Restore NuGet packages for all projects in the solution
+# This downloads all dependencies defined in project files
+- task: NuGetCommand@2                    # Azure DevOps task for NuGet operations
+  displayName: 'Restore NuGet packages'  # Human-readable name shown in pipeline logs
   inputs:
-    command: 'restore'
-    restoreSolution: '**/*.sln'
+    command: 'restore'                    # NuGet command to execute
+    restoreSolution: '**/*.sln'           # Glob pattern to find solution files
 
-# 2. Build the full solution in Release configuration
-- task: DotNetCoreCLI@2
-  displayName: 'Build solution'
+# Step 2: Build the full solution in Release configuration
+# Compiles all projects in the solution
+- task: DotNetCoreCLI@2                   # Azure DevOps task for .NET Core CLI operations
+  displayName: 'Build solution'          # Human-readable name shown in pipeline logs
   inputs:
-    command: 'build'
-    projects: '**/*.sln'
-    arguments: '--configuration $(buildConfiguration)'
+    command: 'build'                      # .NET CLI command to execute
+    projects: '**/*.sln'                  # Glob pattern to find solution files
+    arguments: '--configuration $(buildConfiguration)'  # Pass build configuration variable
 
-# 3. Run all test projects and enforce test results and code coverage
-- task: DotNetCoreCLI@2
+# Step 3: Run all test projects and enforce test results and code coverage
+# Executes unit tests and measures code coverage with minimum threshold
+- task: DotNetCoreCLI@2                   # Azure DevOps task for .NET Core CLI operations
   displayName: 'Run unit tests and enforce code coverage threshold'
   inputs:
-    command: 'test'
-    projects: '**/*Tests.csproj'
-    arguments: >
-      --configuration $(buildConfiguration)
-      /p:CollectCoverage=true
-      /p:CoverletOutputFormat=cobertura
-      /p:CoverletOutput=$(Agent.TempDirectory)/coverage/
-      /p:Threshold=80
-      /p:ThresholdType=line
-      /p:ThresholdStat=total
-    publishTestResults: true
+    command: 'test'                       # .NET CLI command to execute
+    projects: '**/*Tests.csproj'          # Glob pattern to find test projects
+    arguments: >                          # Multi-line arguments using YAML folded scalar
+      --configuration $(buildConfiguration)              # Use specified build configuration
+      /p:CollectCoverage=true                            # Enable code coverage collection
+      /p:CoverletOutputFormat=cobertura                  # Output format for coverage data
+      /p:CoverletOutput=$(Agent.TempDirectory)/coverage/ # Directory to store coverage files
+      /p:Threshold=80                                    # Minimum coverage percentage required
+      /p:ThresholdType=line                              # Type of coverage measurement (line coverage)
+      /p:ThresholdStat=total                             # Apply threshold to total coverage
+    publishTestResults: true              # Automatically publish test results to Azure DevOps
   
-  # 4. Publish code coverage results to Azure DevOps
-- task: PublishCodeCoverageResults@2
-  displayName: 'Publish code coverage'
+# Step 4: Publish code coverage results to Azure DevOps
+# Makes coverage data available in the Azure DevOps UI
+- task: PublishCodeCoverageResults@2      # Azure DevOps task for publishing coverage results
+  displayName: 'Publish code coverage'   # Human-readable name shown in pipeline logs
   inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Agent.TempDirectory)/coverage/coverage.cobertura.xml'
-    pathToSources: '$(Build.SourcesDirectory)'
+    codeCoverageTool: 'Cobertura'         # Format of the coverage data (Cobertura XML)
+    summaryFileLocation: '$(Agent.TempDirectory)/coverage/coverage.cobertura.xml'  # Path to coverage file
+    pathToSources: '$(Build.SourcesDirectory)'  # Root directory of source code for mapping
     

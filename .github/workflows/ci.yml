@@ -1,40 +1,58 @@
+# GitHub Actions workflow for Continuous Integration
+# This workflow builds and tests the NutriFinder application
 name: Build and Test
 
+# Define when this workflow should run
 on:
-  push:
+  push:                          # Trigger on push events
     branches:
-      - dev
-      - 'feature/**'
-  pull_request:
+      - dev                      # Run on pushes to dev branch
+      - 'feature/**'             # Run on pushes to any feature branch (feature/*)
+  pull_request:                  # Trigger on pull request events
     branches:
-      - main
-      - dev
+      - main                     # Run on PRs targeting main branch
+      - dev                      # Run on PRs targeting dev branch
 
+# Define the jobs that make up this workflow
 jobs:
-  build-test:
-    runs-on: ubuntu-latest
+  build-test:                    # Job ID for the build and test job
+    runs-on: ubuntu-latest       # Use latest Ubuntu runner provided by GitHub
 
+    # Environment variables available to all steps in this job
     env:
-      DOTNET_VERSION: '9.0.x'
-      BUILD_CONFIG: 'Debug'
+      DOTNET_VERSION: '9.0.x'    # .NET version to use (9.0.x = latest 9.0 patch)
+      BUILD_CONFIG: 'Debug'      # Build configuration (Debug for CI to catch more issues)
 
+    # Sequence of steps that make up this job
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # Step 1: Get the source code from the repository
+      - name: Checkout code             # Human-readable step name
+        uses: actions/checkout@v3       # Use GitHub's checkout action v3
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      # Step 2: Install and configure .NET SDK
+      - name: Setup .NET                # Human-readable step name
+        uses: actions/setup-dotnet@v4   # Use GitHub's .NET setup action v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: ${{ env.DOTNET_VERSION }}  # Use version from environment variable
 
-      - name: Restore dependencies
-        run: dotnet restore
+      # Step 3: Download and restore NuGet packages for all projects
+      - name: Restore dependencies      # Human-readable step name
+        run: dotnet restore             # .NET CLI command to restore packages
 
-      - name: Build solution
+      # Step 4: Compile the entire solution
+      - name: Build solution            # Human-readable step name
         run: dotnet build --no-restore --configuration ${{ env.BUILD_CONFIG }}
+        # --no-restore = Skip restore since we already did it
+        # --configuration = Use build config from environment variable
 
+      # Step 5: Pre-download MongoDB Docker image to prevent test failures
       - name: Pre-pull Mongo image to avoid Testcontainers CI pull failure
-        run: docker pull mongo:7.0.21
+        run: docker pull mongo:7.0.21   # Pull specific MongoDB version used by tests
+        # This prevents Testcontainers from timing out during image pull in CI
 
-      - name: Run tests
+      # Step 6: Execute all unit and integration tests
+      - name: Run tests                 # Human-readable step name
         run: dotnet test --no-build --configuration ${{ env.BUILD_CONFIG }} --verbosity normal
+        # --no-build = Skip build since we already built the solution
+        # --configuration = Use same config as build step
+        # --verbosity normal = Show reasonable amount of test output

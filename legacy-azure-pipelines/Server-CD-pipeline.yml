@@ -1,67 +1,79 @@
-# CD pipeline for NutriFinder server
-# This pipeline builds and pushes the NutriFinder Docker image to Docker Hub
+# CD pipeline for NutriFinder server - Continuous Deployment
+# This pipeline builds and pushes the NutriFinder server Docker image to Docker Hub
 # Triggered automatically when the CI pipeline (BuildAndTest) completes successfully on 'main'
-# - Only include changes on nutrifinder.Server path and to pipelines
+# Handles containerization and deployment of the server API application
 
-trigger: none
-pr: none
+# Disable automatic triggers for this pipeline - it only runs via pipeline resources
+trigger: none  # No direct branch triggers
+pr: none       # No pull request triggers
 
-# Reference the CI pipeline that must complete before this CD pipeline runs
+# Define pipeline dependencies - this CD pipeline depends on successful CI pipeline completion
 resources:
   pipelines:
-    - pipeline: BuildAndTest
-      source: BuildAndTest
-      trigger:
+    - pipeline: BuildAndTest              # Internal reference name for the CI pipeline
+      source: BuildAndTest                # Name of the source CI pipeline in Azure DevOps
+      trigger:                            # Conditions that trigger this CD pipeline
         branches:
           include:
-            - main
-#        paths:
-#          include:
-#            - NutriFinder.Server/**
-#            - Client-CD-pipeline.yml
-#            - Client-CI-pipeline.yml
-#            - Server-CD-pipeline.yml
-#            - Server-CI-pipeline.yml
+            - main                        # Only trigger when CI completes on main branch
+#        paths:                           # Commented out path-based filtering
+#          include:                       # Would only trigger on changes to these paths
+#            - NutriFinder.Server/**      # Server application files
+#            - Client-CD-pipeline.yml     # Client CD pipeline file
+#            - Client-CI-pipeline.yml     # Client CI pipeline file
+#            - Server-CD-pipeline.yml     # This pipeline file
+#            - Server-CI-pipeline.yml     # Server CI pipeline file
 
-# Use self hosted default agent pool 
+# Specify which agent pool to use for running this pipeline
 pool:
-  name: Default
+  name: Default                           # Use self-hosted default agent pool
 
+# Define the sequence of steps to execute in this deployment pipeline
 steps:
-  # Step 1: Build Docker image with two tags: latest and unique build ID
-  - task: CmdLine@2
-    displayName: 'Build Docker image'
+  # Step 1: Build Docker image with multiple tags for versioning
+  - task: CmdLine@2                       # Azure DevOps task for command line execution
+    displayName: 'Build Docker image'    # Human-readable name shown in pipeline logs
     inputs:
+      # Build Docker image with two tags: build-specific and latest
       script: docker build -t mtbonde/nutrifinder-server:$(Build.BuildNumber) -t mtbonde/nutrifinder-server:latest -f NutriFinder.Server/Dockerfile .
-         # . means build from solution root, so path in dockerfile are valid
+         # -t mtbonde/nutrifinder-server:$(Build.BuildNumber) = Tag with unique build number
+         # -t mtbonde/nutrifinder-server:latest = Tag as latest version
+         # -f NutriFinder.Server/Dockerfile = Specify Dockerfile location
+         # . = Build context is solution root directory (allows Dockerfile to access all projects)
 
-  # Step 2: Login agent and push both tags to Docker Hub
-  - task: PowerShell@2
-    displayName: 'Debug: show token length'
+  # Step 2a: Debug step to verify Docker Hub credentials are available
+  - task: PowerShell@2                    # Azure DevOps task for PowerShell execution
+    displayName: 'Debug: show token length'  # Human-readable name for debugging
     inputs:
-      targetType: 'inline'
-      script: |
-        Write-Host "Username is: $env:DOCKER_USERNAME"
-        Write-Host "Password Length: $($env:DOCKER_PASSWORD.Length)"
-    env:
-      DOCKER_USERNAME: $(DOCKER_USERNAME)
-      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
+      targetType: 'inline'                # Execute PowerShell script inline (not from file)
+      script: |                           # Multi-line PowerShell script
+        Write-Host "Username is: $env:DOCKER_USERNAME"        # Display username for verification
+        Write-Host "Password Length: $($env:DOCKER_PASSWORD.Length)"  # Display password length (not actual password)
+    env:                                  # Environment variables for this step
+      DOCKER_USERNAME: $(DOCKER_USERNAME)  # Pass Azure DevOps variable as environment variable
+      DOCKER_PASSWORD: $(DOCKER_PASSWORD)  # Pass Azure DevOps variable as environment variable
 
-  - task: CmdLine@2
-    displayName: 'Docker login'
+  # Step 2b: Authenticate with Docker Hub using stored credentials
+  - task: CmdLine@2                       # Azure DevOps task for command line execution
+    displayName: 'Docker login'          # Human-readable name shown in pipeline logs
     inputs:
-      script: docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%
-    env:
-      DOCKER_USERNAME: $(DOCKER_USERNAME)
-      DOCKER_PASSWORD: $(DOCKER_PASSWORD)
-  - task: CmdLine@2
-    displayName: 'Push image to Docker Hub'
+      script: docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%  # Login command with credential variables
+    env:                                  # Environment variables for this step
+      DOCKER_USERNAME: $(DOCKER_USERNAME)  # Azure DevOps secret variable for Docker Hub username
+      DOCKER_PASSWORD: $(DOCKER_PASSWORD)  # Azure DevOps secret variable for Docker Hub password
+      
+  # Step 2c: Push both tagged images to Docker Hub registry
+  - task: CmdLine@2                       # Azure DevOps task for command line execution
+    displayName: 'Push image to Docker Hub'  # Human-readable name shown in pipeline logs
     inputs:
-      script: docker push --all-tags mtbonde/nutrifinder-server
+      script: docker push --all-tags mtbonde/nutrifinder-server  # Push all tags for this image to registry
 
-  # Step 3: Cleanup to remove unused images from the agent
-  - task: CmdLine@2
-    displayName: 'Cleanup old Docker images'
+  # Step 3: Cleanup to remove unused images from the build agent
+  - task: CmdLine@2                       # Azure DevOps task for command line execution
+    displayName: 'Cleanup old Docker images'  # Human-readable name shown in pipeline logs
     inputs:
-      script: |
-        echo y | docker image prune -a --force
+      script: |                           # Multi-line shell script
+        echo y | docker image prune -a --force  # Remove all unused images, auto-confirm with 'y'
+        # -a = Remove all unused images (not just dangling ones)
+        # --force = Don't prompt for confirmation
+        # echo y | = Pipe 'y' to auto-confirm any remaining prompts
