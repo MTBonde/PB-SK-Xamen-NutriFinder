@@ -9,10 +9,12 @@ networks:
 # Define our application services
 services:
   mongo:
-    image: mongo:7.0.21
-    ports:
-      - "27017:27017"
+    image: mongo:7.0.21    
     container_name: nutrifinder-mongo
+    expose:
+      - "27017"  # Kun synlig internt i docker-netværket
+    networks:
+      - default
 
   nutrifinderserver:
     build:
@@ -25,3 +27,5 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Mongo__ConnectionString=mongodb://mongo:27017
+    networks:
+      - default
